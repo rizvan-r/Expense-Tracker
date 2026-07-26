@@ -1,0 +1,16 @@
+merchant,amount,date,category,payment_method,notes,ocr_extracted
+BigBasket Supermarket,3450.00,2026-07-22,Food & Dining,UPI / GPay,Weekly grocery staples & fresh organic vegetables,true
+Indian Oil Fuel Station,2200.00,2026-07-21,Transportation,Debit Card,Full tank petrol refill XP95,true
+Swiggy Food Delivery,680.00,2026-07-20,Food & Dining,UPI / PhonePe,Weekend dinner ordering,false
+Croma Digital Store,14999.00,2026-07-18,Shopping & Electronics,Credit Card,Sony Wireless Noise Cancelling Headphones,true
+Electricity Utility Bill,4250.00,2026-07-15,Housing & Utilities,Net Banking,Monthly electricity bill payment,false
+Amazon India Order,1850.00,2026-07-12,Shopping & Electronics,UPI / GPay,Books & home organizer items,false
+Cult.fit Gym Membership,2500.00,2026-07-10,Health & Fitness,Credit Card,Monthly gym subscription fee,false
+Netflix Premium 4K,649.00,2026-07-05,Subscriptions,Credit Card,Auto-debit monthly streaming plan,false
+Zomato Gourmet,1240.00,2026-07-03,Food & Dining,UPI / GPay,Team lunch treat,false
+Uber Auto & Cab,420.00,2026-07-01,Transportation,UPI / PhonePe,Office commute travel,false
+Starbucks Coffee,580.00,2026-06-28,Food & Dining,UPI / GPay,Coffee meeting,true
+Reliance Trends Outlet,3200.00,2026-06-25,Shopping & Electronics,Credit Card,Casual apparel purchase,false
+Apollo Pharmacy,1150.00,2026-06-20,Health & Fitness,UPI / PhonePe,Monthly wellness supplements,false
+Airtel Fiber Broadband,1179.00,2026-06-15,Housing & Utilities,UPI / GPay,200Mbps fiber internet bill,false
+Apple iCloud 200GB,219.00,2026-06-05,Subscriptions,Credit Card,Cloud storage monthly subscription,false
