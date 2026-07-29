@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, [isSupabaseConfigured]);
 
-  // Google OAuth Login Flow with Gmail Receipts Readonly Scope
+  // Google OAuth Login Flow (Standard Unblocked Scopes)
   const loginWithGoogle = async () => {
     setAuthError(null);
 
@@ -144,10 +144,9 @@ export const AuthProvider = ({ children }) => {
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/`,
-          scopes: 'https://www.googleapis.com/auth/gmail.readonly email profile',
+          scopes: 'email profile',
           queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
+            access_type: 'online',
           },
         },
       });
