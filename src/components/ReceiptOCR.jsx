@@ -38,6 +38,9 @@ export const ReceiptOCR = ({ setActiveView }) => {
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('Food & Dining');
   const [paymentMethod, setPaymentMethod] = useState('UPI / GPay');
+  const [txnReference, setTxnReference] = useState('');
+  const [cardLast4, setCardLast4] = useState('');
+  const [studentInfo, setStudentInfo] = useState('');
   const [notes, setNotes] = useState('');
   const [isAdded, setIsAdded] = useState(false);
 
@@ -60,13 +63,31 @@ export const ReceiptOCR = ({ setActiveView }) => {
         setMerchant(res.merchant || 'Store Merchant');
         setAmount(res.amount || 0);
         setDate(res.date || new Date().toISOString().split('T')[0]);
-        setCategory(res.category || 'Food & Dining');
-        setPaymentMethod(res.payment_method || 'UPI / GPay');
-        
+        setCategory(res.category || 'Education & Self Care');
+        setPaymentMethod(res.payment_method || 'Bank Transfer');
+
+        const refNo = res.payment_details?.reference_no || 'Receipt #622';
+        const modeStr = res.payment_details?.mode || res.payment_method || 'Bank Transfer';
+        setTxnReference(refNo);
+        setCardLast4(res.payment_details?.card_last_4 || 'N/A');
+
         const orderSummary = (res.items || [])
           .map(i => `${i.item_name} (x${i.quantity})`)
           .join(', ');
-        setNotes(orderSummary ? `Order Items: ${orderSummary}` : `OCR Extracted Receipt`);
+
+        let fullNotes = `Txn Ref: ${refNo} | Payment Mode: ${modeStr}`;
+        if (res.raw_text) {
+          const studentMatch = res.raw_text.match(/(?:Name|Roll No|Class|Fee Period)\s*:\s*[^\n]+/gi);
+          if (studentMatch && studentMatch.length > 0) {
+            const specStr = studentMatch.join(' | ');
+            setStudentInfo(specStr);
+            fullNotes += ` | Student Specs: ${specStr}`;
+          }
+        }
+        if (orderSummary) {
+          fullNotes += ` | Line Items: ${orderSummary}`;
+        }
+        setNotes(fullNotes);
       }
     } catch (err) {
       console.warn('OCR Scan Error:', err);
@@ -159,6 +180,14 @@ export const ReceiptOCR = ({ setActiveView }) => {
       payment_method: paymentMethod,
       notes,
       ocr_extracted: true,
+      payment_details: {
+        mode: paymentMethod,
+        reference_no: txnReference || scanResult?.payment_details?.reference_no || 'Receipt #622',
+        card_last_4: cardLast4 || 'N/A',
+        student_info: studentInfo || '',
+        status: 'PAID'
+      },
+      line_items: scanResult?.items || [],
       receipt_url: previewUrl
     });
 
@@ -438,6 +467,34 @@ export const ReceiptOCR = ({ setActiveView }) => {
                     <option value="Net Banking">Net Banking</option>
                     <option value="Cash">Cash</option>
                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                    Receipt / Txn Reference No
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Receipt #622 or Txn ID"
+                    value={txnReference}
+                    onChange={(e) => setTxnReference(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-indigo-300 font-mono focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                    Student / Receipt Specs
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Roll No, Name, Class"
+                    value={studentInfo}
+                    onChange={(e) => setStudentInfo(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                  />
                 </div>
               </div>
 

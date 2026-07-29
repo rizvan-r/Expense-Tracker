@@ -7,7 +7,7 @@ env_path = os.path.join(root_dir, '.env')
 load_dotenv(dotenv_path=env_path)
 load_dotenv()
 
-from fastapi import FastAPI, HTTPException, File, UploadFile
+from fastapi import FastAPI, HTTPException, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict, Any
 
@@ -123,6 +123,38 @@ async def api_ocr_upload(file: UploadFile = File(...)):
     print(f"[FASTAPI OCR] Received upload file: {file.filename} saved to {file_location}")
     extracted = extract_ocr_data(file_location)
     return extracted
+
+@app.post("/api/ocr/parse-json")
+async def api_ocr_parse_json(request: Request):
+    """
+    Parses Azure Document Intelligence / Vision OCR JSON output directly into structured expense record.
+    """
+    ocr_json = await request.json()
+    extracted_text = parse_azure_vision_ocr_response(ocr_json)
+
+    groq_key = os.environ.get("GROQ_API_KEY", "").strip()
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+
+    if groq_key:
+        res = extract_ocr_with_groq_api("azure_ocr.json", extracted_text, groq_key)
+        res["ocr_engine"] = "Azure Vision OCR + Groq Llama-3.3"
+        return res
+    elif openai_key:
+        res = extract_ocr_with_groq_api("azure_ocr.json", extracted_text, openai_key)
+        res["ocr_engine"] = "Azure Vision OCR + OpenAI"
+        return res
+    else:
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        return {
+            "success": True,
+            "merchant": "Extracted OCR Document",
+            "amount": 0.0,
+            "date": today_str,
+            "category": "General",
+            "payment_method": "Credit Card",
+            "raw_text": extracted_text,
+            "ocr_engine": "Azure Vision OCR Parser"
+        }
 
 @app.post("/api/ai/predict-budget", response_model=BudgetPredictResponse)
 def api_predict_budget(req: BudgetPredictRequest):
