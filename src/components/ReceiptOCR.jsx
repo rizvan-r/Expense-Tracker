@@ -40,7 +40,6 @@ export const ReceiptOCR = ({ setActiveView }) => {
   const [paymentMethod, setPaymentMethod] = useState('UPI / GPay');
   const [txnReference, setTxnReference] = useState('');
   const [cardLast4, setCardLast4] = useState('');
-  const [studentInfo, setStudentInfo] = useState('');
   const [notes, setNotes] = useState('');
   const [isAdded, setIsAdded] = useState(false);
 
@@ -76,14 +75,6 @@ export const ReceiptOCR = ({ setActiveView }) => {
           .join(', ');
 
         let fullNotes = `Txn Ref: ${refNo} | Payment Mode: ${modeStr}`;
-        if (res.raw_text) {
-          const studentMatch = res.raw_text.match(/(?:Name|Roll No|Class|Fee Period)\s*:\s*[^\n]+/gi);
-          if (studentMatch && studentMatch.length > 0) {
-            const specStr = studentMatch.join(' | ');
-            setStudentInfo(specStr);
-            fullNotes += ` | Student Specs: ${specStr}`;
-          }
-        }
         if (orderSummary) {
           fullNotes += ` | Line Items: ${orderSummary}`;
         }
@@ -94,80 +85,6 @@ export const ReceiptOCR = ({ setActiveView }) => {
     } finally {
       setIsScanning(false);
     }
-  };
-
-  const handleSelectSample = (sampleType) => {
-    setIsScanning(true);
-    setScanResult(null);
-    setIsAdded(false);
-
-    setTimeout(() => {
-      let sampleData = {
-        success: true,
-        merchant: 'BigBasket Supermarket',
-        amount: 3450.00,
-        date: new Date().toISOString().split('T')[0],
-        category: 'Food & Dining',
-        payment_method: 'UPI / GPay',
-        confidence: 0.98,
-        items: [
-          { item_name: 'Organic Whole Milk 1L', quantity: 2, unit_price: 75.00, total_price: 150.00 },
-          { item_name: 'Atta Flour 5kg', quantity: 1, unit_price: 280.00, total_price: 280.00 },
-          { item_name: 'Basmati Rice 5kg', quantity: 1, unit_price: 650.00, total_price: 650.00 },
-          { item_name: 'Fresh Vegetables Assorted', quantity: 1, unit_price: 420.00, total_price: 420.00 },
-          { item_name: 'Dry Fruits Gift Pack', quantity: 1, unit_price: 1950.00, total_price: 1950.00 }
-        ],
-        raw_text: 'BIGBASKET RETAIL INDIA\nDate: 2026-07-24\nTOTAL: ₹3,450.00\nPayment: GPay UPI'
-      };
-
-      if (sampleType === 'fuel') {
-        sampleData = {
-          success: true,
-          merchant: 'Indian Oil Fuel Station',
-          amount: 2200.00,
-          date: new Date().toISOString().split('T')[0],
-          category: 'Transportation',
-          payment_method: 'Debit Card',
-          confidence: 0.95,
-          items: [
-            { item_name: 'XP95 Premium Petrol Fuel', quantity: 21, unit_price: 104.76, total_price: 2200.00 }
-          ],
-          raw_text: 'INDIAN OIL CORP LTD\nXP95 Petrol: 21.00 L\nTotal: ₹2,200.00\nPayment: Debit Card ****4129'
-        };
-      } else if (sampleType === 'electronics') {
-        sampleData = {
-          success: true,
-          merchant: 'Croma Electronics',
-          amount: 14999.00,
-          date: new Date().toISOString().split('T')[0],
-          category: 'Shopping & Electronics',
-          payment_method: 'Credit Card',
-          confidence: 0.99,
-          items: [
-            { item_name: 'Sony Wireless Noise Cancelling Headphones', quantity: 1, unit_price: 14999.00, total_price: 14999.00 }
-          ],
-          raw_text: 'CROMA DIGITAL RETAIL\nItem: Sony Headphones\nPrice: ₹14,999.00\nPayment: HDFC Credit Card'
-        };
-      }
-
-      setPreviewUrl(
-        sampleType === 'fuel'
-          ? 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&auto=format&fit=crop&q=60'
-          : sampleType === 'electronics'
-          ? 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=60'
-          : 'https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?w=600&auto=format&fit=crop&q=60'
-      );
-
-      setScanResult(sampleData);
-      setMerchant(sampleData.merchant);
-      setAmount(sampleData.amount);
-      setDate(sampleData.date);
-      setCategory(sampleData.category);
-      setPaymentMethod(sampleData.payment_method);
-      const itemsText = sampleData.items.map(i => `${i.item_name} (x${i.quantity})`).join(', ');
-      setNotes(`Order Items: ${itemsText}`);
-      setIsScanning(false);
-    }, 1200);
   };
 
   const handleConfirmAndSave = async (e) => {
@@ -184,7 +101,6 @@ export const ReceiptOCR = ({ setActiveView }) => {
         mode: paymentMethod,
         reference_no: txnReference || scanResult?.payment_details?.reference_no || 'Receipt #622',
         card_last_4: cardLast4 || 'N/A',
-        student_info: studentInfo || '',
         status: 'PAID'
       },
       line_items: scanResult?.items || [],
@@ -257,31 +173,6 @@ export const ReceiptOCR = ({ setActiveView }) => {
                 </div>
                 <p className="text-[11px] text-slate-500">Supports PDF Invoices, Bank Statements, Paper Receipts & Photos</p>
               </label>
-            </div>
-
-            {/* Pre-Loaded Sample Receipt Buttons */}
-            <div className="mt-4 pt-4 border-t border-slate-800">
-              <span className="text-xs font-semibold text-slate-400 block mb-2">Or test with pre-loaded sample bills:</span>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={() => handleSelectSample('grocery')}
-                  className="px-2.5 py-2 bg-slate-900 hover:bg-indigo-600/20 text-slate-300 border border-slate-800 hover:border-indigo-500/40 rounded-xl text-xs font-semibold transition-all text-center"
-                >
-                  🛒 Grocery
-                </button>
-                <button
-                  onClick={() => handleSelectSample('fuel')}
-                  className="px-2.5 py-2 bg-slate-900 hover:bg-indigo-600/20 text-slate-300 border border-slate-800 hover:border-indigo-500/40 rounded-xl text-xs font-semibold transition-all text-center"
-                >
-                  ⛽ Fuel Refill
-                </button>
-                <button
-                  onClick={() => handleSelectSample('electronics')}
-                  className="px-2.5 py-2 bg-slate-900 hover:bg-indigo-600/20 text-slate-300 border border-slate-800 hover:border-indigo-500/40 rounded-xl text-xs font-semibold transition-all text-center"
-                >
-                  🎧 Headphones
-                </button>
-              </div>
             </div>
           </Card>
 
@@ -470,32 +361,17 @@ export const ReceiptOCR = ({ setActiveView }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                    Receipt / Txn Reference No
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Receipt #622 or Txn ID"
-                    value={txnReference}
-                    onChange={(e) => setTxnReference(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-indigo-300 font-mono focus:outline-none focus:border-indigo-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                    Student / Receipt Specs
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Roll No, Name, Class"
-                    value={studentInfo}
-                    onChange={(e) => setStudentInfo(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  Receipt / Txn Reference No
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Receipt #622 or Txn ID"
+                  value={txnReference}
+                  onChange={(e) => setTxnReference(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-indigo-300 font-mono focus:outline-none focus:border-indigo-500"
+                />
               </div>
 
               <div>

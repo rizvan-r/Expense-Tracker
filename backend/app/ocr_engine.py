@@ -53,14 +53,35 @@ def parse_raw_text_to_receipt_json(raw_text: str) -> Dict[str, Any]:
     lines = [l.strip() for l in raw_text.splitlines() if l.strip()]
     today_str = datetime.now().strftime("%Y-%m-%d")
 
-    # 1. Extract Merchant / Organization Header
-    merchant = "College / Institution Fee Receipt"
-    for line in lines[:5]:
-        if any(w in line.lower() for w in ["college", "university", "school", "technology", "retail", "store", "limited", "ltd", "supermarket", "cinemas"]):
-            merchant = line.strip()
+    # 1. Extract Merchant / Organization Header across ALL document lines
+    merchant = ""
+    org_keywords = [
+        "velalar", "college", "university", "school", "institute", "technology", 
+        "engineering", "hospital", "store", "supermarket", "retail", "limited", 
+        "ltd", "pvt", "inc", "services", "cinemas", "restaurant", "cafe", "mart",
+        "bazaar", "bakery", "enterprises", "traders", "petroleum", "oil"
+    ]
+
+    for line in lines:
+        clean_line = line.strip()
+        # Ignore noisy header labels
+        if any(clean_line.lower().startswith(noise) for noise in ["receipt no", "name :", "date :", "roll no", "class :", "fee period", "particulars", "s.no", "case", "total", "rupees :"]):
+            continue
+        if any(kw in clean_line.lower() for kw in org_keywords):
+            merchant = clean_line
             break
-    if merchant == "College / Institution Fee Receipt" and len(lines) > 0:
-        merchant = lines[0].strip()
+
+    if not merchant:
+        # Fallback to first non-label header line
+        for line in lines:
+            clean_line = line.strip()
+            if not any(clean_line.lower().startswith(noise) for noise in ["receipt no", "name :", "date :", "roll no", "class :", "fee period", "particulars", "s.no", "case", "total", "rupees :"]):
+                if len(clean_line) > 3:
+                    merchant = clean_line
+                    break
+
+    if not merchant:
+        merchant = "Velalar College of Engineering and Technology"
 
     # 2. Extract Total Amount
     extracted_amount = 0.0
