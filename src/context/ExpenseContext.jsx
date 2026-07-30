@@ -246,8 +246,12 @@ export const ExpenseProvider = ({ children }) => {
       payment_method: newExp.payment_method || 'Credit Card',
       notes: newExp.notes || '',
       receipt_url: newExp.receipt_url || null,
-      ocr_extracted: Boolean(newExp.ocr_extracted)
+      ocr_extracted: Boolean(newExp.ocr_extracted),
+      payment_details: newExp.payment_details || null,
+      line_items: newExp.line_items || []
     };
+
+    let addedItem = item;
 
     if (isSupabaseConfigured && authUser?.id) {
       try {
@@ -260,21 +264,32 @@ export const ExpenseProvider = ({ children }) => {
           payment_method: item.payment_method,
           notes: item.notes,
           receipt_url: item.receipt_url,
-          ocr_extracted: item.ocr_extracted
+          ocr_extracted: item.ocr_extracted,
+          payment_details: item.payment_details,
+          line_items: item.line_items
         }]).select().single();
 
         if (!error && data) {
+          addedItem = data;
           setSupabaseExpenses(prev => [data, ...prev]);
+        } else {
+          console.warn('Supabase insert fallback:', error);
+          setSupabaseExpenses(prev => [item, ...prev]);
         }
       } catch (err) {
         console.warn('Supabase expense insert error:', err);
+        setSupabaseExpenses(prev => [item, ...prev]);
       }
+    } else {
+      setSupabaseExpenses(prev => [item, ...prev]);
     }
 
     setUserExpensesMap(prev => {
       const curList = prev[userId] || [];
-      return { ...prev, [userId]: [item, ...curList] };
+      return { ...prev, [userId]: [addedItem, ...curList] };
     });
+
+    return addedItem;
   };
 
   const updateExpense = async (id, updatedFields) => {
