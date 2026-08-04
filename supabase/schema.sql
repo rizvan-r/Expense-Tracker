@@ -84,6 +84,11 @@ CREATE TABLE IF NOT EXISTS public.expenses (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Ensure category text column exists on existing expenses table
+ALTER TABLE public.expenses ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'Miscellaneous';
+-- Ensure type text column exists on existing expenses table (DEBIT vs CREDIT)
+ALTER TABLE public.expenses ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'DEBIT';
+
 ALTER TABLE public.expenses ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow authenticated and anon expense management" ON public.expenses;

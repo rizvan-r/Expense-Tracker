@@ -145,3 +145,38 @@ class AIChatResponse(BaseModel):
     reply: str
     source: str  # "openai" or "rule_engine"
     suggested_actions: List[str] = []
+
+# User Schema
+class UserSchema(BaseModel):
+    id: Optional[str] = None
+    email: str
+    full_name: Optional[str] = "User"
+    avatar_url: Optional[str] = ""
+    monthly_income: Optional[float] = 85000.0
+    monthly_budget: Optional[float] = 55000.0
+    currency: Optional[str] = "₹"
+    occupation: Optional[str] = "Professional"
+    financial_strategy: Optional[str] = "Moderate Wealth Builder"
+    savings_goal_target: Optional[float] = 200000.0
+    emergency_fund_target: Optional[float] = 150000.0
+    created_at: Optional[str] = None
+
+# Category Schema
+class CategorySchema(BaseModel):
+    id: Optional[str] = None
+    name: str
+    icon: Optional[str] = "Tag"
+    color: Optional[str] = "#10b981"
+    monthly_limit: Optional[float] = 10000.0
+
+# Savings Goal Schema
+class SavingsGoalSchema(BaseModel):
+    id: Optional[str] = None
+    user_id: Optional[str] = None
+    name: str
+    target_amount: float
+    current_amount: float = 0.0
+    target_date: Optional[str] = None
+    category: Optional[str] = "Vault"
+    color: Optional[str] = "#6366f1"
+

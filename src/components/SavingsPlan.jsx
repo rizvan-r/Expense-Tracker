@@ -64,14 +64,14 @@ export const SavingsPlan = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12 w-full">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-emerald-900/40 via-teal-900/30 to-slate-900/50 p-6 rounded-3xl border border-emerald-500/20 glass-panel">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400">AI Wealth Roadmap</span>
+            <Sparkles className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">AI Wealth Roadmap</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">Personalized Savings Plan</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-heading">Personalized Savings Plan</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-medium mt-1">
             Set custom financial goals and let AI build step-by-step milestone timelines and cutback targets in Rupees (₹).
           </p>
         </div>
@@ -83,7 +83,7 @@ export const SavingsPlan = () => {
 
       {/* Active Savings Goals Cards */}
       <div className="space-y-4">
-        <h3 className="text-lg font-bold text-white font-heading">Active Savings Vault Goals</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">Active Savings Vault Goals</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {savingsGoals.map((goal) => {
@@ -93,20 +93,20 @@ export const SavingsPlan = () => {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <Badge variant="emerald">{goal.category || 'General'}</Badge>
-                    <span className="text-xs text-slate-400">Target: {goal.target_date}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Target: {goal.target_date}</span>
                   </div>
-                  <h4 className="text-base font-bold text-white font-heading">{goal.title}</h4>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white font-heading">{goal.title}</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-medium mt-1">
                     ₹{goal.current_amount.toLocaleString('en-IN')} saved of ₹{goal.target_amount.toLocaleString('en-IN')} goal
                   </p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
                     <span>Progress</span>
-                    <span className="text-emerald-400">{pct}%</span>
+                    <span className="text-emerald-700 dark:text-emerald-400">{pct}%</span>
                   </div>
-                  <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
                     <div
                       className="bg-gradient-to-r from-emerald-500 to-teal-400 h-2.5 rounded-full transition-all duration-500"
                       style={{ width: `${pct}%` }}
@@ -114,9 +114,9 @@ export const SavingsPlan = () => {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                  <span className="text-slate-400">Remaining: ₹{(goal.target_amount - goal.current_amount).toLocaleString('en-IN')}</span>
-                  <span className="text-indigo-400 hover:underline cursor-pointer">View Roadmap →</span>
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-medium">
+                  <span className="text-slate-600 dark:text-slate-400">Remaining: ₹{(goal.target_amount - goal.current_amount).toLocaleString('en-IN')}</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline cursor-pointer">View Roadmap →</span>
                 </div>
               </Card>
             );

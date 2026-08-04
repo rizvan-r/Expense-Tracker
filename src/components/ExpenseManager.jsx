@@ -123,12 +123,12 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="space-y-6 animate-fade-in pb-12">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">Expense Ledger</h1>
-          <p className="text-sm text-slate-400">View, search, edit, and log transactions with custom categorization.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-heading">Expense Ledger</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">View, search, edit, and log transactions with custom categorization.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="secondary" icon={Download} onClick={handleExportCSV}>
@@ -145,13 +145,13 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
         <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
           {/* Search Input */}
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-500 dark:text-slate-400" />
             <input
               type="text"
               placeholder="Search merchant or notes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-900/60 border border-slate-700/60 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2 neu-input text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-600 transition-colors"
             />
           </div>
 
@@ -159,10 +159,10 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
             <button
               onClick={() => setSelectedCategory('ALL')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 selectedCategory === 'ALL'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-white dark:bg-slate-800 border-1.5 border-emerald-600 text-emerald-700 dark:text-emerald-400 shadow-[3px_3px_8px_#cbd5e1,-3px_-3px_8px_#ffffff] dark:shadow-none'
+                  : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
               }`}
             >
               All Categories ({expenses.length})
@@ -171,10 +171,10 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.name)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                   selectedCategory === cat.name
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                    ? 'bg-white dark:bg-slate-800 border-1.5 border-emerald-600 text-emerald-700 dark:text-emerald-400 shadow-[3px_3px_8px_#cbd5e1,-3px_-3px_8px_#ffffff] dark:shadow-none'
+                    : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
                 }`}
               >
                 {cat.name}
@@ -187,8 +187,8 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
       {/* Expense Table Card */}
       <Card className="p-0 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-slate-900/80 text-xs uppercase font-semibold text-slate-400 border-b border-slate-800">
+          <table className="w-full text-left text-sm text-slate-800 dark:text-slate-200">
+            <thead className="bg-slate-50 dark:bg-slate-950 text-xs uppercase font-bold text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th className="px-6 py-4">Merchant & Note</th>
                 <th className="px-6 py-4">Category</th>
@@ -199,25 +199,25 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredExpenses.length > 0 ? (
                 filteredExpenses.map((exp) => {
                   const catObj = categories.find(c => c.name === exp.category);
-                  const color = catObj ? catObj.color : '#6366f1';
+                  const color = catObj ? catObj.color : '#059669';
                   return (
-                    <tr key={exp.id} className="hover:bg-slate-800/40 transition-colors group">
+                    <tr key={exp.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-white group-hover:text-indigo-300 transition-colors">
+                        <div className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                           {exp.merchant}
                         </div>
                         {exp.notes && (
-                          <div className="text-xs text-slate-400 mt-0.5 truncate max-w-xs">{exp.notes}</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5 truncate max-w-xs">{exp.notes}</div>
                         )}
                       </td>
 
                       <td className="px-6 py-4">
                         <span
-                          className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border"
+                          className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border"
                           style={{
                             backgroundColor: `${color}15`,
                             color: color,
@@ -228,15 +228,15 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                         </span>
                       </td>
 
-                      <td className="px-6 py-4 text-xs text-slate-400">
+                      <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-300 font-medium">
                         {exp.date}
                       </td>
 
-                      <td className="px-6 py-4 text-xs text-slate-400">
+                      <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-300 font-medium">
                         {exp.payment_method || 'Credit Card'}
                       </td>
 
-                      <td className="px-6 py-4 text-right font-bold text-white font-heading">
+                      <td className="px-6 py-4 text-right font-bold text-slate-900 dark:text-white font-heading">
                         ₹{Number(exp.amount).toFixed(2)}
                       </td>
 
@@ -246,16 +246,16 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                             href={exp.receipt_url}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300"
+                            className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
                             title="View Receipt Image"
                           >
                             <Receipt className="w-4 h-4" />
                             <span className="hidden sm:inline">View</span>
                           </a>
                         ) : exp.ocr_extracted ? (
-                          <Badge variant="cyan">OCR Parsed</Badge>
+                          <Badge variant="emerald">OCR Parsed</Badge>
                         ) : (
-                          <span className="text-xs text-slate-600">—</span>
+                          <span className="text-xs text-slate-400">—</span>
                         )}
                       </td>
 
@@ -263,14 +263,14 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => openEditModal(exp)}
-                            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+                            className="p-1.5 text-slate-500 hover:text-slate-900 rounded-lg hover:bg-slate-200/60 transition-colors"
                             title="Edit Expense"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => deleteExpense(exp.id)}
-                            className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors"
+                            className="p-1.5 text-slate-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
                             title="Delete Expense"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -282,7 +282,7 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                 })
               ) : (
                 <tr>
-                  <td colSpan="7" className="text-center py-12 text-slate-500">
+                  <td colSpan="7" className="text-center py-12 text-slate-500 font-medium">
                     No transactions found matching your criteria.
                   </td>
                 </tr>
@@ -304,7 +304,7 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Merchant / Store Name *
               </label>
               <input
@@ -313,12 +313,12 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                 placeholder="e.g. Whole Foods, Starbucks, Amazon"
                 value={formMerchant}
                 onChange={(e) => setFormMerchant(e.target.value)}
-                className="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Amount (₹) *
               </label>
               <input
@@ -328,20 +328,20 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                 placeholder="0.00"
                 value={formAmount}
                 onChange={(e) => setFormAmount(e.target.value)}
-                className="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Category
               </label>
               <select
                 value={formCategory}
                 onChange={(e) => setFormCategory(e.target.value)}
-                className="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600"
               >
                 {categories.map((c) => (
                   <option key={c.id} value={c.name}>
@@ -352,27 +352,27 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Transaction Date
               </label>
               <input
                 type="date"
                 value={formDate}
                 onChange={(e) => setFormDate(e.target.value)}
-                className="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Payment Method
               </label>
               <select
                 value={formPaymentMethod}
                 onChange={(e) => setFormPaymentMethod(e.target.value)}
-                className="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600"
               >
                 <option value="Credit Card">Credit Card</option>
                 <option value="Debit Card">Debit Card</option>
@@ -383,7 +383,7 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Notes / Tags
               </label>
               <input
@@ -391,12 +391,12 @@ export const ExpenseManager = ({ isAddModalOpen, setIsAddModalOpen }) => {
                 placeholder="Optional description"
                 value={formNotes}
                 onChange={(e) => setFormNotes(e.target.value)}
-                className="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
               />
             </div>
           </div>
 
-          <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-800">
+          <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-200">
             <Button
               type="button"
               variant="secondary"

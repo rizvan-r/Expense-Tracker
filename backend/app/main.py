@@ -1,4 +1,8 @@
 import os
+import json
+import urllib.request
+import urllib.parse
+from datetime import datetime
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -7,15 +11,16 @@ env_path = os.path.join(root_dir, '.env')
 load_dotenv(dotenv_path=env_path)
 load_dotenv()
 
-from fastapi import FastAPI, HTTPException, File, UploadFile, Request
+from fastapi import FastAPI, HTTPException, File, UploadFile, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 from app.schemas import (
     OCRScanResponse, BudgetPredictRequest, BudgetPredictResponse,
     HealthScoreRequest, HealthScoreResponse, WhatIfRequest, WhatIfResponse,
     SavingsPlanRequest, SavingsPlanResponse, PurchaseAdvisorRequest, PurchaseAdvisorResponse,
-    RecommendationsRequest, AIChatRequest, AIChatResponse
+    RecommendationsRequest, AIChatRequest, AIChatResponse,
+    ExpenseItem, UserSchema, CategorySchema, SavingsGoalSchema
 )
 from app.ocr_engine import extract_ocr_data
 from app.ml_predictor import predict_budget_trend, calculate_health_score, simulate_savings_what_if
@@ -27,12 +32,12 @@ from app.ai_insights import (
 )
 
 app = FastAPI(
-    title="AI Personal Expense Tracker API",
-    description="FastAPI Backend for OCR Receipt Extraction, ML Budget Forecasting, and OpenAI Advice",
-    version="1.0.0"
+    title="SpendAI Personal Expense Tracker API",
+    description="Unified Python FastAPI Backend for OCR Receipt Extraction, Stock Quotes, ML Budget Forecasting, and Financial AI Coaching",
+    version="2.0.0"
 )
 
-# Enable CORS for React frontend (Vite port 3000 / 3001)
+# Enable CORS for React web app & mobile Expo apps
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -41,19 +46,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# In-memory mock storage (mirrors Supabase for standalone Python API fallback)
+db_users = {}
+db_expenses = []
+db_categories = [
+  { "id": "cat-1", "name": "Food & Dining", "icon": "Utensils", "color": "#f59e0b", "monthly_limit": 15000.00 },
+  { "id": "cat-2", "name": "Transportation", "icon": "Car", "color": "#3b82f6", "monthly_limit": 8000.00 },
+  { "id": "cat-3", "name": "Housing & Utilities", "icon": "Home", "color": "#6366f1", "monthly_limit": 20000.00 },
+  { "id": "cat-4", "name": "Shopping & Electronics", "icon": "ShoppingBag", "color": "#ec4899", "monthly_limit": 10000.00 },
+  { "id": "cat-5", "name": "Entertainment", "icon": "Film", "color": "#8b5cf6", "monthly_limit": 5000.00 }
+]
+db_goals = []
+
 @app.get("/")
 def read_root():
     return {
         "status": "online",
-        "service": "AI Personal Expense Tracker API",
+        "service": "SpendAI Unified Python FastAPI Backend",
         "openai_configured": bool(os.environ.get("OPENAI_API_KEY")),
         "groq_configured": bool(os.environ.get("GROQ_API_KEY")),
         "mindee_configured": bool(os.environ.get("MINDEE_API_KEY")),
+        "finnhub_configured": bool(os.environ.get("FINNHUB_API_KEY")),
         "endpoints": [
+            "/api/users",
+            "/api/expenses",
+            "/api/categories",
+            "/api/savings-goals",
+            "/api/stock/quote",
             "/api/ocr/scan",
             "/api/ocr/upload",
-            "/api/ocr/scan-receipt",
-            "/api/stock/quote",
             "/api/ai/predict-budget",
             "/api/ai/health-score",
             "/api/ai/recommendations",
@@ -64,11 +85,115 @@ def read_root():
         ]
     }
 
+# ==========================================
+# 1. USER PROFILES API
+# ==========================================
+@app.get("/api/users")
+def get_all_users():
+    return list(db_users.values())
+
+@app.get("/api/users/{user_id}")
+def get_user_by_id(user_id: str):
+    if user_id in db_users:
+        return db_users[user_id]
+    return {
+        "id": user_id,
+        "email": "user@example.com",
+        "full_name": "User",
+        "monthly_income": 85000.0,
+        "monthly_budget": 55000.0,
+        "currency": "₹",
+        "occupation": "Professional",
+        "financial_strategy": "Moderate Wealth Builder"
+    }
+
+@app.put("/api/users/{user_id}")
+def update_user(user_id: str, user: UserSchema):
+    db_users[user_id] = user.dict()
+    return db_users[user_id]
+
+# ==========================================
+# 2. EXPENSES API
+# ==========================================
+@app.get("/api/expenses")
+def get_expenses(user_id: Optional[str] = None):
+    if user_id:
+        return [e for e in db_expenses if e.get("user_id") == user_id]
+    return db_expenses
+
+@app.post("/api/expenses")
+def create_expense(expense: ExpenseItem):
+    exp_data = expense.dict()
+    if not exp_data.get("id"):
+        exp_data["id"] = f"exp-{len(db_expenses) + 1}"
+    db_expenses.append(exp_data)
+    return exp_data
+
+@app.delete("/api/expenses/{expense_id}")
+def delete_expense(expense_id: str):
+    global db_expenses
+    db_expenses = [e for e in db_expenses if e.get("id") != expense_id]
+    return {"message": "Expense deleted successfully", "id": expense_id}
+
+@app.get("/api/expenses/summary")
+def get_expense_summary(user_id: Optional[str] = None):
+    filtered = [e for e in db_expenses if not user_id or e.get("user_id") == user_id]
+    total = sum(e.get("amount", 0.0) for e in filtered)
+    return {
+        "total_spent": total,
+        "count": len(filtered),
+        "user_id": user_id
+    }
+
+# ==========================================
+# 3. CATEGORIES API
+# ==========================================
+@app.get("/api/categories")
+def get_categories():
+    return db_categories
+
+@app.post("/api/categories")
+def create_category(cat: CategorySchema):
+    cat_data = cat.dict()
+    if not cat_data.get("id"):
+        cat_data["id"] = f"cat-{len(db_categories) + 1}"
+    db_categories.append(cat_data)
+    return cat_data
+
+@app.delete("/api/categories/{category_id}")
+def delete_category(category_id: str):
+    global db_categories
+    db_categories = [c for c in db_categories if c.get("id") != category_id]
+    return {"message": "Category deleted successfully", "id": category_id}
+
+# ==========================================
+# 4. SAVINGS GOALS API
+# ==========================================
+@app.get("/api/savings-goals")
+def get_savings_goals(user_id: Optional[str] = None):
+    if user_id:
+        return [g for g in db_goals if g.get("user_id") == user_id]
+    return db_goals
+
+@app.post("/api/savings-goals")
+def create_savings_goal(goal: SavingsGoalSchema):
+    goal_data = goal.dict()
+    if not goal_data.get("id"):
+        goal_data["id"] = f"goal-{len(db_goals) + 1}"
+    db_goals.append(goal_data)
+    return goal_data
+
+@app.delete("/api/savings-goals/{goal_id}")
+def delete_savings_goal(goal_id: str):
+    global db_goals
+    db_goals = [g for g in db_goals if g.get("id") != goal_id]
+    return {"message": "Savings Goal deleted successfully", "id": goal_id}
+
+# ==========================================
+# 5. STOCK MARKET QUOTES API
+# ==========================================
 @app.get("/api/stock/quote")
 def api_stock_quote(symbol: str = "AAPL"):
-    """
-    Fetches real-time stock market quote from Finnhub API using custom FINNHUB_API_KEY from .env
-    """
     finnhub_key = os.environ.get("FINNHUB_API_KEY", "").strip()
     if not finnhub_key:
         finnhub_key = "d9iqat1r01qvkt7dndggd9iqat1r01qvkt7dndh0"
@@ -94,24 +219,18 @@ def api_stock_quote(symbol: str = "AAPL"):
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Finnhub API error: {err}")
 
+# ==========================================
+# 6. OCR RECEIPT EXTRACTOR API
+# ==========================================
 @app.post("/api/ocr/scan", response_model=OCRScanResponse)
 def api_ocr_scan(file_path: str):
-    """
-    Extracts merchant, amount, date, category, and payment details from receipt file path.
-    """
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Receipt image file not found")
-    
-    extracted = extract_ocr_data(file_path)
-    return extracted
+    return extract_ocr_data(file_path)
 
 @app.post("/api/ocr/upload", response_model=OCRScanResponse)
 @app.post("/api/ocr/scan-receipt", response_model=OCRScanResponse)
 async def api_ocr_upload(file: UploadFile = File(...)):
-    """
-    Uploads receipt/invoice file (PNG/JPG/JPEG/WebP/PDF) and extracts merchant, total amount (₹),
-    payment details, and itemized order breakdown using Groq & OpenAI Vision OCR.
-    """
     temp_dir = os.path.join(os.getcwd(), "tmp_receipts")
     os.makedirs(temp_dir, exist_ok=True)
 
@@ -120,61 +239,24 @@ async def api_ocr_upload(file: UploadFile = File(...)):
         content = await file.read()
         buffer.write(content)
 
-    print(f"[FASTAPI OCR] Received upload file: {file.filename} saved to {file_location}")
-    extracted = extract_ocr_data(file_location)
-    return extracted
+    print(f"[FASTAPI OCR] Received upload file: {file.filename}")
+    return extract_ocr_data(file_location)
 
-@app.post("/api/ocr/parse-json")
-async def api_ocr_parse_json(request: Request):
-    """
-    Parses Azure Document Intelligence / Vision OCR JSON output directly into structured expense record.
-    """
-    ocr_json = await request.json()
-    extracted_text = parse_azure_vision_ocr_response(ocr_json)
-
-    groq_key = os.environ.get("GROQ_API_KEY", "").strip()
-    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
-
-    if groq_key:
-        res = extract_ocr_with_groq_api("azure_ocr.json", extracted_text, groq_key)
-        res["ocr_engine"] = "Azure Vision OCR + Groq Llama-3.3"
-        return res
-    elif openai_key:
-        res = extract_ocr_with_groq_api("azure_ocr.json", extracted_text, openai_key)
-        res["ocr_engine"] = "Azure Vision OCR + OpenAI"
-        return res
-    else:
-        today_str = datetime.now().strftime("%Y-%m-%d")
-        return {
-            "success": True,
-            "merchant": "Extracted OCR Document",
-            "amount": 0.0,
-            "date": today_str,
-            "category": "General",
-            "payment_method": "Credit Card",
-            "raw_text": extracted_text,
-            "ocr_engine": "Azure Vision OCR Parser"
-        }
-
+# ==========================================
+# 7. AI & MACHINE LEARNING INSIGHTS API
+# ==========================================
 @app.post("/api/ai/predict-budget", response_model=BudgetPredictResponse)
 def api_predict_budget(req: BudgetPredictRequest):
-    """
-    Predicts end-of-month expenditure using linear regression burn-rate model.
-    """
-    res = predict_budget_trend(
+    return predict_budget_trend(
         monthly_budget=req.monthly_budget,
         current_spent=req.current_spent,
         current_day=req.current_day,
         days_in_month=req.days_in_month
     )
-    return res
 
 @app.post("/api/ai/health-score", response_model=HealthScoreResponse)
 def api_health_score(req: HealthScoreRequest):
-    """
-    Calculates overall 0-100 financial health score based on category spending weights.
-    """
-    res = calculate_health_score(
+    return calculate_health_score(
         monthly_income=req.monthly_income,
         monthly_budget=req.monthly_budget,
         total_spent=req.total_spent,
@@ -184,64 +266,45 @@ def api_health_score(req: HealthScoreRequest):
         negative_spend=req.negative_spend,
         positive_spend=req.positive_spend
     )
-    return res
 
 @app.post("/api/ai/recommendations")
 def api_recommendations(req: RecommendationsRequest):
-    """
-    Generates personalized cost-cutting action cards and flags spending patterns.
-    """
     recs = generate_ai_recommendations(req.expenses, req.monthly_budget, req.monthly_income)
     return {"recommendations": recs}
 
 @app.post("/api/ai/simulate", response_model=WhatIfResponse)
 def api_simulate(req: WhatIfRequest):
-    """
-    Simulates impact of category spending cutbacks over 12 months.
-    """
-    res = simulate_savings_what_if(
+    return simulate_savings_what_if(
         current_income=req.current_income,
         current_monthly_spend=req.current_monthly_spend,
         reductions=req.reductions,
         timeframe_months=req.timeframe_months
     )
-    return res
 
 @app.post("/api/ai/savings-plan", response_model=SavingsPlanResponse)
 def api_savings_plan(req: SavingsPlanRequest):
-    """
-    Generates milestone timeline and category cutbacks for achieving a targeted savings goal.
-    """
-    res = generate_savings_plan(
+    return generate_savings_plan(
         target_goal_name=req.target_goal_name,
         target_amount=req.target_amount,
         target_months=req.target_months,
         current_income=req.current_income,
         current_expenses=req.current_expenses
     )
-    return res
 
 @app.post("/api/ai/purchase-limit-advisor", response_model=PurchaseAdvisorResponse)
 def api_purchase_limit_advisor(req: PurchaseAdvisorRequest):
-    """
-    Calculates safe daily purchase caps, 50/30/20 savings allocations, and purchase verdicts.
-    """
-    res = calculate_purchase_advisor_limits(
+    return calculate_purchase_advisor_limits(
         monthly_income=req.monthly_income,
         monthly_budget=req.monthly_budget,
         total_spent=req.total_spent,
         intended_purchase_name=req.intended_purchase_name or "",
         intended_purchase_amount=req.intended_purchase_amount or 0.0
     )
-    return res
 
 @app.post("/api/ai/chat", response_model=AIChatResponse)
 def api_ai_chat(req: AIChatRequest):
-    """
-    OpenAI-powered conversational chatbot endpoint for personal financial advice.
-    """
     history_dicts = [{"role": m.role, "content": m.content} for m in req.history]
-    res = generate_openai_chatbot_response(
+    return generate_openai_chatbot_response(
         message=req.message,
         history=history_dicts,
         monthly_income=req.monthly_income,
@@ -249,4 +312,3 @@ def api_ai_chat(req: AIChatRequest):
         total_spent=req.total_spent,
         expenses=req.expenses
     )
-    return res

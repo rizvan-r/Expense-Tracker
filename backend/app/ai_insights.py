@@ -268,7 +268,8 @@ def generate_openai_chatbot_response(
                 data=json.dumps(payload).encode("utf-8"),
                 headers={
                     "Content-Type": "application/json",
-                    "Authorization": f"Bearer {groq_key}"
+                    "Authorization": f"Bearer {groq_key}",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
                 },
                 method="POST"
             )
