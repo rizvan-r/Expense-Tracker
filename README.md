@@ -1,106 +1,124 @@
-# 👁️ SpendAI — AI Personal Expense Tracker
+# 👁️ SpendAI — AI Personal Expense Tracker & Financial Assistant
 
-A state-of-the-art, AI-powered personal finance and expense tracking web application featuring **Illuminati Pyramid Branding**, **OpenAI & Groq Conversational Financial Assistant**, **Multi-Provider PDF & Receipt OCR Scanner**, **ML Spending Predictor**, **Supabase Authentication**, and **PostgreSQL Database Persistence**.
+A state-of-the-art, AI-powered personal finance, expense management, and wealth advice application built with **React (Vite)**, **React Native (Expo Mobile App)**, **Unified Python FastAPI Backend**, **Supabase Auth & PostgreSQL Persistence**, and **Groq (Llama-3.3-70b) & OpenAI LLM Engines**.
 
 ---
 
-## ✨ Features
+## ✨ Key Features & Architectural Highlights
 
-- 👁️ **Illuminati Eye of Providence Branding**: Glowing pyramid logo with a sleek, modern glassmorphic dark-mode interface.
-- 🤖 **SpendAI Conversational Assistant**: Floating AI chatbot powered by **Groq (`llama-3.3-70b-versatile`)** and **OpenAI (`gpt-4o-mini`)** providing real-time financial coaching, SIP/investing advice, tax savings (80C), and affordability checks.
-- 📄 **PDF & Receipt OCR Order Extractor**:
-  - Drag-and-drop support for **PDF Invoices, Bank Statements & Photo Receipts**.
-  - Powered by **Groq Llama-3.3-70b**, **OpenAI Vision**, **Mindee V5**, and **OCR.space APIs**.
-  - Extracts **Merchant Name**, **Total Amount in Rupees (₹)**, **Date**, **Category**, **Payment Method & Reference Specs** (*UPI Ref ID*, *Card Last 4*, *Status*), and an **Itemized Order Details Table**.
-- 🔮 **ML Burn-Rate Budget Predictor**: Linear regression model forecasting end-of-month expenditure and budget overruns.
-- 📊 **0-100 Financial Health Score Card**: Evaluates savings rates, category caps, and 50/30/20 rule discipline.
-- 🛍️ **Safe Daily Cap & Purchase Limit Advisor**: Instant affordability verdicts (*APPROVED*, *CAUTION*, *REJECTED*) for intended purchases.
-- 🔮 **What-If Savings Simulator**: Compound interest projection tool simulating 12-month savings from category cutbacks.
-- 🔐 **Supabase Authentication & Multi-Profile Support**:
-  - **Google OAuth 2.0** and **Email/Password Sign-In**.
-  - Automated user profile syncing into Supabase `public.users` table.
-  - Multi-profile selector to test with individual user personas.
-- 🗄️ **Supabase PostgreSQL Persistence**: Row-Level Security (RLS) policies protecting `expenses`, `categories`, and `savings_goals`.
+### 📱 Multi-Platform Experience (Web App & Mobile App)
+- **Web App**: Built with React 18, Vite, Tailwind CSS, Glassmorphic UI design, and **Collapsible Left Sidebar Navigation**.
+- **Mobile App**: Built with React Native (Expo), Supabase Auth, Camera Receipt Scanner, Bank SMS Auto-Sync, and native charts.
+
+### 🧭 Collapsible Left Sidebar Navigation
+- **Expanded & Compact Rail Modes**: Switch between full 260px sidebar and 80px mini-rail icon mode.
+- **Categorized Sections**:
+  - 📊 **Main Overview**: Dashboard, Expense Ledger, Receipt OCR
+  - 🤖 **AI Intelligence**: Budget & ML, AI Advisor, Financial Health Score, Scenario Simulator, Savings Plan
+  - ⚙️ **Account**: Profile & Financial Configuration
+- **Mobile Drawer Menu**: Slide-over drawer overlay for smartphones and tablets.
+
+### 🤖 SpendAI Conversational Financial Coach
+- Powered by **Groq Cloud (`llama-3.3-70b-versatile`)** and **OpenAI (`gpt-4o-mini`)**.
+- Contextual understanding of your income, current month spend, and Indian financial rules (50/30/20 rule, Section 80C/80D tax deductions, NPS, SIP compounding).
+- Client-side & backend keyword AI engine fallback when offline.
+
+### 📄 Vision OCR Receipt & Invoice Extractor
+- Drag-and-drop support for **PDF Invoices, Bank Statements & Photo Receipts**.
+- Extracts Merchant Name, Total Amount (₹), Date, Category, Payment Method, Reference IDs, and an **Itemized Order Breakdown Table**.
+
+### 🔮 Machine Learning & Predictive Analytics
+- **ML Burn-Rate Budget Predictor**: Linear regression model forecasting end-of-month spend and budget overruns.
+- **0–100 Financial Health Score**: Diagnostic index analyzing productive vs. discretionary spend.
+- **What-If Scenario Simulator**: 12-month compound interest savings projection tool.
+
+### 🔐 Supabase Auth & Direct Profile Sync
+- **Google OAuth 2.0 & Email/Password Sign-In**.
+- Profile information (`monthly_income`, `monthly_budget`, `occupation`, `financial_strategy`, `avatar_url`) is saved persistently in Supabase `public.users` table.
+- Display and edit custom Profile Avatar pictures in the **Profile & Financial Config** view.
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Frontend:
-- **Framework**: React 18, Vite
-- **Styling**: Tailwind CSS, Glassmorphism, CSS Modules
-- **Icons**: Lucide React Icons
-- **Charts**: Recharts
-- **HTTP Client**: Axios
-- **Authentication & Database**: Supabase JS SDK (`@supabase/supabase-js`)
-
-### Backend:
-- **Framework**: Python 3.10+, FastAPI, Uvicorn
-- **AI Models**: Groq Cloud API (`llama-3.3-70b-versatile`), OpenAI API (`gpt-4o-mini`)
-- **OCR Engine**: PyPDF, Mindee V5, OCR.space API, Base64 Vision Engine
-- **Data Schemas**: Pydantic v2
+| Layer | Technologies Used |
+| :--- | :--- |
+| **Web Frontend** | React 18, Vite, Tailwind CSS, Lucide Icons, Recharts, Axios |
+| **Mobile App** | React Native, Expo SDK 54, React Navigation, AsyncStorage |
+| **Unified Backend** | Python 3.10+, FastAPI, Uvicorn, Pydantic v2 |
+| **AI & LLM Services** | Groq Cloud LPU (`llama-3.3-70b-versatile`), OpenAI API (`gpt-4o-mini`) |
+| **OCR Engines** | PyPDF, Mindee V5, OCR.space, Base64 Vision Engine |
+| **Database & Auth** | Supabase PostgreSQL, Supabase Auth (OAuth & RLS Policies) |
+| **Market Data API** | Finnhub Stock Quote API |
 
 ---
 
 ## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
-- Node.js (v18 or higher)
-- Python (v3.10 or higher)
+- **Node.js**: v18.0.0 or higher
+- **Python**: v3.10.0 or higher
 
-### 2. Environment Setup
+---
+
+### 2. Environment Configuration
 Create a `.env` file in the project root:
 
 ```env
-# Groq Cloud API Key (For Llama-3.3-70b PDF & Receipt OCR Extraction)
+# Groq Cloud API Key (For Llama-3.3-70b Receipt OCR & AI Chat)
 GROQ_API_KEY=gsk_your_groq_api_key_here
 
 # OpenAI API Key Configuration
 OPENAI_API_KEY=sk-proj-your_openai_api_key_here
 
-# Specialized OCR API Keys (Optional)
-OCR_SPACE_API_KEY=helloworld
-MINDEE_API_KEY=
+# Finnhub Stock Market API Key
+FINNHUB_API_KEY=your_finnhub_key_here
 
 # Supabase Credentials
 VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
-### 3. Backend Setup & Run
+---
+
+### 3. Backend Setup (Python FastAPI)
+
 ```bash
-# Navigate to backend directory
+# Navigate to the backend directory
 cd backend
 
 # Install Python dependencies
 pip install -r requirements.txt
 
 # Start FastAPI server (Runs on http://localhost:8000)
-python run.py
-```
-
-### 4. Frontend Setup & Run
-```bash
-# Install Node dependencies
-npm install
-
-# Start Vite dev server (Runs on http://localhost:3001)
-npm run dev
-```
-
-### 5. Run Both Concurrently
-```bash
-npm run dev:all
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ---
 
-## 🗄️ Supabase Database Setup
+### 4. Web Frontend Setup (React + Vite)
 
-Run the SQL script in [`supabase/schema.sql`](file:///i:/Richu/Projects/Expense%20Tracker/supabase/schema.sql) in your **Supabase SQL Editor** to initialize the tables and security policies:
+```bash
+# Install Node dependencies
+npm install
 
-```sql
--- Creates users, categories, expenses, and savings_goals tables with RLS and automated user trigger
+# Start Vite dev server (Runs on http://localhost:3000)
+npm run dev
+```
+
+---
+
+### 5. Mobile App Setup (React Native + Expo)
+
+```bash
+# Navigate to the mobile directory
+cd mobile
+
+# Install dependencies
+npm install
+
+# Start Expo development server
+npm start
 ```
 
 ---
@@ -109,34 +127,56 @@ Run the SQL script in [`supabase/schema.sql`](file:///i:/Richu/Projects/Expense%
 
 ```
 Expense Tracker/
-├── backend/
+├── backend/                  # Unified Python FastAPI Backend
 │   ├── app/
-│   │   ├── main.py             # FastAPI app & endpoint routes
-│   │   ├── ocr_engine.py       # Groq, OpenAI Vision, Mindee OCR pipeline
-│   │   ├── ai_insights.py      # OpenAI/Groq Chatbot & purchase advisor
-│   │   ├── ml_predictor.py     # Linear regression budget burn-rate model
-│   │   └── schemas.py          # Pydantic models
-│   └── run.py                  # Uvicorn server launcher
-├── src/
+│   │   ├── main.py           # FastAPI REST routes (Users, Expenses, Categories, OCR, AI)
+│   │   ├── ai_insights.py    # Groq & OpenAI LLM Chatbot & Advisor
+│   │   ├── ml_predictor.py   # Linear regression budget burn-rate model
+│   │   ├── ocr_engine.py     # Multi-provider Vision OCR pipeline
+│   │   └── schemas.py        # Pydantic data schemas
+│   ├── requirements.txt
+│   └── run.py
+├── mobile/                   # React Native (Expo) Mobile Application
+│   ├── screens/              # HomeScreen, ReceiptScanner, AIChat, BankSmsSync, Profile
+│   ├── services/             # API client & Bank SMS parsing engine
+│   ├── lib/                  # Supabase client adapter
+│   └── package.json
+├── src/                      # React Web Application
 │   ├── components/
-│   │   ├── AIAssistantWidget.jsx # Floating AI Assistant Chatbot
-│   │   ├── ReceiptOCR.jsx       # PDF & Receipt Scanner & Order Itemizer
-│   │   ├── Navbar.jsx           # Top Navigation with Illuminati Logo
-│   │   ├── LoginScreen.jsx      # Google OAuth & Email Login Screen
-│   │   ├── DashboardOverview.jsx# Financial Summary & Analytics
-│   │   └── UI/
-│   │       └── IlluminatiLogo.jsx # Glowing Eye of Providence SVG Logo
+│   │   ├── Sidebar.jsx       # Collapsible Left Navigation Bar
+│   │   ├── TopHeader.jsx     # Header with active view title & quick action button
+│   │   ├── Dashboard.jsx     # Financial Dashboard & Analytics
+│   │   ├── ExpenseManager.jsx# Expense Ledger & Filtering
+│   │   ├── ReceiptOCR.jsx    # PDF & Receipt Vision OCR Extractor
+│   │   ├── AIFinancialAdvisor.jsx # AI Safe Daily Cap & Purchase Advisor
+│   │   ├── HealthScore.jsx   # 0-100 Financial Health Diagnostic Card
+│   │   ├── ProfileView.jsx   # Profile & Photo Avatar Config
+│   │   ├── LoginScreen.jsx   # Supabase Google OAuth & Email Sign-In
+│   │   └── UI/               # Reusable Glassmorphism Cards, Badges, Logos
 │   ├── context/
-│   │   ├── AuthContext.jsx      # Supabase Auth & Multi-Profile State
-│   │   └── ExpenseContext.jsx   # Expense CRUD & Supabase DB Sync
+│   │   ├── AuthContext.jsx   # Supabase Auth & Profile Persistence
+│   │   ├── ExpenseContext.jsx# Expense CRUD & Supabase DB Sync
+│   │   └── ThemeContext.jsx  # Dark / Light Theme State
 │   └── services/
-│       ├── apiService.js        # FastAPI Client
-│       └── supabaseClient.js    # Supabase Client & URL Sanitizer
+│       ├── apiService.js     # FastAPI HTTP client
+│       └── supabaseClient.js # Supabase client
 ├── supabase/
-│   └── schema.sql              # Supabase PostgreSQL Database Schema
-├── .env                        # Environment variables
-└── package.json
+│   └── schema.sql            # Master PostgreSQL schema & RLS policies
+├── .env                      # Environment variables
+├── package.json
+└── README.md
 ```
+
+---
+
+## 🗄️ Supabase PostgreSQL Database Setup
+
+Run the SQL script in [`supabase/schema.sql`](file:///i:/Richu/Projects/Expense%20Tracker/supabase/schema.sql) in your **Supabase SQL Editor** to initialize the database tables:
+
+- `public.users`: User profiles, avatar URLs, income, budget, and strategy preferences.
+- `public.expenses`: Transactions, categories, amounts, dates, and payment methods.
+- `public.categories`: Spending categories and monthly limits.
+- `public.savings_goals`: Goal vaults and milestone progress.
 
 ---
 
