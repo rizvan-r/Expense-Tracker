@@ -141,14 +141,14 @@ export const BudgetPredictor = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12 w-full">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-indigo-900/40 via-blue-900/30 to-slate-900/50 p-6 rounded-3xl border border-indigo-500/20 glass-panel">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Zap className="w-4 h-4 text-indigo-400" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">ML Forecast Engine</span>
+            <Zap className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">ML Forecast Engine</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">Budgeting & Predictive Analysis</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-heading">Budgeting & Predictive Analysis</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-medium mt-1">
             Machine learning linear regression projects your month-end total spend based on current velocity.
           </p>
         </div>
@@ -189,8 +189,8 @@ export const BudgetPredictor = () => {
       <Card className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
           <div>
-            <h3 className="text-lg font-bold text-white font-heading">Spending Trajectory vs Target Budget</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">Spending Trajectory vs Target Budget</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               Solid line represents actual spend to date; dashed curve represents ML projection.
             </p>
           </div>
@@ -209,8 +209,8 @@ export const BudgetPredictor = () => {
       <Card className="p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold text-white font-heading">Category Budget Cap Performance</h3>
-            <p className="text-xs text-slate-400">Tracking spending vs individual category limits</p>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">Category Budget Cap Performance</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Tracking spending vs individual category limits</p>
           </div>
         </div>
 
@@ -222,18 +222,18 @@ export const BudgetPredictor = () => {
             const isOver = spent > limit;
 
             return (
-              <div key={cat.id} className="p-4 bg-slate-900/60 rounded-xl border border-slate-800 space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-white flex items-center gap-2">
+              <div key={cat.id} className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+                <div className="flex items-center justify-between text-xs font-bold">
+                  <span className="text-slate-900 dark:text-white flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }}></span>
                     {cat.name}
                   </span>
-                  <span className={isOver ? 'text-rose-400 font-bold' : 'text-slate-400'}>
+                  <span className={isOver ? 'text-rose-700 dark:text-rose-400 font-bold' : 'text-slate-600 dark:text-slate-400'}>
                     ₹{spent.toLocaleString('en-IN')} / ₹{limit.toLocaleString('en-IN')} ({pct}%)
                   </span>
                 </div>
 
-                <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       isOver ? 'bg-rose-500' : pct > 80 ? 'bg-amber-500' : 'bg-emerald-500'
@@ -249,12 +249,12 @@ export const BudgetPredictor = () => {
 
       {/* Modal to edit budget */}
       {isEditingBudget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-          <div className="glass-panel max-w-md w-full p-6 rounded-2xl border border-slate-700">
-            <h3 className="text-xl font-bold text-white font-heading mb-4">Set Target Monthly Budget</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 dark:bg-black/80 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 max-w-md w-full p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white font-heading">Set Target Monthly Budget</h3>
             <form onSubmit={handleSaveBudget} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Monthly Net Income (₹)
                 </label>
                 <input
@@ -262,12 +262,12 @@ export const BudgetPredictor = () => {
                   required
                   value={tempIncome}
                   onChange={(e) => setTempIncome(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white font-bold"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Monthly Expense Budget (₹)
                 </label>
                 <input
@@ -275,11 +275,11 @@ export const BudgetPredictor = () => {
                   required
                   value={tempBudget}
                   onChange={(e) => setTempBudget(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white font-bold"
                 />
               </div>
 
-              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-800">
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
                 <Button type="button" variant="secondary" onClick={() => setIsEditingBudget(false)}>
                   Cancel
                 </Button>

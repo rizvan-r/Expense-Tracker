@@ -1,8 +1,8 @@
 import React from 'react';
 
-export const IlluminatiLogo = ({ className = "w-6 h-6", glow = true }) => {
+export const IlluminatiLogo = ({ className = "w-6 h-6", glow = false }) => {
   return (
-    <div className={`relative inline-flex items-center justify-center ${glow ? 'drop-shadow-[0_0_12px_rgba(99,102,241,0.6)]' : ''}`}>
+    <div className={`relative inline-flex items-center justify-center`}>
       <svg
         viewBox="0 0 100 100"
         className={className}
@@ -21,11 +21,6 @@ export const IlluminatiLogo = ({ className = "w-6 h-6", glow = true }) => {
             <stop offset="50%" stopColor="#818cf8" />
             <stop offset="100%" stopColor="#c084fc" />
           </linearGradient>
-
-          <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
         </defs>
 
         {/* Outer Radiant Light Rays */}
@@ -64,7 +59,7 @@ export const IlluminatiLogo = ({ className = "w-6 h-6", glow = true }) => {
         />
 
         {/* Iris & Pupil */}
-        <circle cx="50" cy="30" r="6" fill="url(#eyeGrad)" filter="url(#glowFilter)" />
+        <circle cx="50" cy="30" r="6" fill="url(#eyeGrad)" />
         <circle cx="50" cy="30" r="2.5" fill="#ffffff" />
         <circle cx="52" cy="28.5" r="0.8" fill="#ffffff" />
       </svg>

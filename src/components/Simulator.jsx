@@ -137,14 +137,14 @@ export const Simulator = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12 w-full">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-slate-900/50 p-6 rounded-3xl border border-purple-500/20 glass-panel">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Sliders className="w-4 h-4 text-purple-400" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-purple-400">Interactive Scenario Engine</span>
+            <Sliders className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Interactive Scenario Engine</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">"What If?" Savings Simulator</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-heading">"What If?" Savings Simulator</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-medium mt-1">
             Adjust category expense cutbacks and observe real-time projected compound savings growth in Rupees (₹).
           </p>
         </div>
@@ -193,13 +193,13 @@ export const Simulator = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Category Sliders Panel */}
         <Card className="lg:col-span-1 p-6 space-y-6">
-          <h3 className="text-lg font-bold text-white font-heading">Adjust Cutback Percentages</h3>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">Adjust Cutback Percentages</h3>
 
           {/* Slider 1: Food & Dining */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-200">Food & Dining Cutback</span>
-              <span className="text-emerald-400 font-bold">-{diningCut}% (₹{monthlyFoodSaved}/mo)</span>
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-slate-900 dark:text-slate-200">Food & Dining Cutback</span>
+              <span className="text-emerald-700 dark:text-emerald-400">-{diningCut}% (₹{monthlyFoodSaved}/mo)</span>
             </div>
             <input
               type="range"
@@ -207,15 +207,15 @@ export const Simulator = () => {
               max="50"
               value={diningCut}
               onChange={(e) => setDiningCut(Number(e.target.value))}
-              className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+              className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
             />
           </div>
 
           {/* Slider 2: Subscriptions */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-200">Subscriptions Cutback</span>
-              <span className="text-indigo-400 font-bold">-{subCut}% (₹{monthlySubSaved}/mo)</span>
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-slate-900 dark:text-slate-200">Subscriptions Cutback</span>
+              <span className="text-emerald-700 dark:text-indigo-400">-{subCut}% (₹{monthlySubSaved}/mo)</span>
             </div>
             <input
               type="range"
@@ -223,15 +223,15 @@ export const Simulator = () => {
               max="75"
               value={subCut}
               onChange={(e) => setSubCut(Number(e.target.value))}
-              className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+              className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
             />
           </div>
 
           {/* Slider 3: Shopping */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-200">Shopping Cutback</span>
-              <span className="text-pink-400 font-bold">-{shoppingCut}% (₹{monthlyShoppingSaved}/mo)</span>
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-slate-900 dark:text-slate-200">Shopping Cutback</span>
+              <span className="text-pink-700 dark:text-pink-400">-{shoppingCut}% (₹{monthlyShoppingSaved}/mo)</span>
             </div>
             <input
               type="range"
@@ -239,15 +239,15 @@ export const Simulator = () => {
               max="50"
               value={shoppingCut}
               onChange={(e) => setShoppingCut(Number(e.target.value))}
-              className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-pink-500"
+              className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-pink-500"
             />
           </div>
 
           {/* Slider 4: Entertainment */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-200">Entertainment Cutback</span>
-              <span className="text-purple-400 font-bold">-{entCut}% (₹{monthlyEntSaved}/mo)</span>
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-slate-900 dark:text-slate-200">Entertainment Cutback</span>
+              <span className="text-purple-700 dark:text-purple-400">-{entCut}% (₹{monthlyEntSaved}/mo)</span>
             </div>
             <input
               type="range"
@@ -255,13 +255,13 @@ export const Simulator = () => {
               max="60"
               value={entCut}
               onChange={(e) => setEntCut(Number(e.target.value))}
-              className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
+              className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
             />
           </div>
 
           {/* Time Horizon Selector */}
-          <div className="pt-4 border-t border-slate-800">
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-2">
               Time Horizon
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -269,10 +269,10 @@ export const Simulator = () => {
                 <button
                   key={m}
                   onClick={() => setTimeframeMonths(m)}
-                  className={`py-1.5 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`py-1.5 rounded-xl text-xs font-bold transition-colors ${
                     timeframeMonths === m
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700'
                   }`}
                 >
                   {m} Months
@@ -286,8 +286,8 @@ export const Simulator = () => {
         <Card className="lg:col-span-2 p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg font-bold text-white font-heading">Compound Wealth Accumulation Curve</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">Compound Wealth Accumulation Curve</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 Assuming monthly extra savings reinvested at 7% APY yield
               </p>
             </div>
@@ -298,9 +298,9 @@ export const Simulator = () => {
             <Line data={chartData} options={chartOptions} />
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 font-medium">
             <span>By Month {timeframeMonths}, you accumulate ₹{compoundData[compoundData.length - 1]?.saved.toLocaleString('en-IN')}</span>
-            <span className="text-emerald-400 font-semibold">Ready to Lock Plan</span>
+            <span className="text-emerald-700 dark:text-emerald-400 font-bold">Ready to Lock Plan</span>
           </div>
         </Card>
       </div>

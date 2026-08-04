@@ -114,19 +114,19 @@ export const AIFinancialAdvisor = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12 w-full">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-violet-900/40 via-indigo-900/30 to-slate-900/50 p-6 rounded-3xl border border-violet-500/20 glass-panel">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Bot className="w-4 h-4 text-violet-400" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-violet-400">Smart Financial Assistant</span>
+            <Bot className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Smart Financial Assistant</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">AI Purchase Limits & Savings Advisor</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-heading">AI Purchase Limits & Savings Advisor</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-medium mt-1">
             Calculates safe daily purchase caps, single-item spending limits, 50/30/20 savings allocations, and purchase affordability.
           </p>
         </div>
 
-        <Badge variant="cyan" className="self-start md:self-auto text-xs py-1.5 px-4">
+        <Badge variant="emerald" className="self-start md:self-auto text-xs py-1.5 px-4">
           Interactive AI Active
         </Badge>
       </div>
@@ -172,16 +172,16 @@ export const AIFinancialAdvisor = () => {
         <Card className="lg:col-span-1 p-6 space-y-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <ShoppingBag className="w-5 h-5 text-indigo-400" />
-              <h3 className="text-lg font-bold text-white font-heading">"Can I Afford This?" Evaluator</h3>
+              <ShoppingBag className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">"Can I Afford This?" Evaluator</h3>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
               Enter an intended item or purchase to evaluate if it fits safely within your remaining budget.
             </p>
 
             <form onSubmit={handleEvaluatePurchase} className="space-y-4 mt-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Item / Planned Purchase Name
                 </label>
                 <input
@@ -189,12 +189,12 @@ export const AIFinancialAdvisor = () => {
                   placeholder="e.g. Sony TV, iPhone 15, Goa Trip"
                   value={purchaseName}
                   onChange={(e) => setPurchaseName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white font-bold"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Cost Amount (₹) *
                 </label>
                 <input
@@ -203,7 +203,7 @@ export const AIFinancialAdvisor = () => {
                   placeholder="e.g. 25000"
                   value={purchaseAmount}
                   onChange={(e) => setPurchaseAmount(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white font-bold text-emerald-400 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2.5 neu-input text-sm text-emerald-700 dark:text-emerald-400 font-bold"
                 />
               </div>
 
@@ -217,10 +217,10 @@ export const AIFinancialAdvisor = () => {
           {evaluationResult && (
             <div className={`p-4 rounded-2xl border space-y-2 mt-4 ${
               evaluationResult.verdict === 'APPROVED'
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'
+                ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
                 : evaluationResult.verdict === 'CAUTION'
-                ? 'bg-amber-500/10 border-amber-500/30 text-amber-200'
-                : 'bg-rose-500/10 border-rose-500/30 text-rose-200'
+                ? 'bg-amber-50 dark:bg-amber-950/60 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+                : 'bg-rose-50 dark:bg-rose-950/60 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200'
             }`}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider">AI Evaluation Verdict</span>
@@ -231,50 +231,50 @@ export const AIFinancialAdvisor = () => {
                   {evaluationResult.verdict}
                 </Badge>
               </div>
-              <p className="text-xs leading-relaxed">{evaluationResult.details}</p>
+              <p className="text-xs font-medium leading-relaxed">{evaluationResult.details}</p>
             </div>
           )}
         </Card>
 
         {/* Right 2 Cols: Interactive AI Coaching Chat & Prompt Buttons */}
         <Card className="lg:col-span-2 p-6 flex flex-col justify-between space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-violet-500/10 rounded-xl text-violet-400 border border-violet-500/20">
+              <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 rounded-xl text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
                 <Bot className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white font-heading">AI Financial Coach & Savings Advisor</h3>
-                <p className="text-xs text-slate-400">Ask questions about purchase limits, savings benchmarks, or expense rules</p>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">AI Financial Coach & Savings Advisor</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Ask questions about purchase limits, savings benchmarks, or expense rules</p>
               </div>
             </div>
-            <Badge variant="indigo">Live AI Assistant</Badge>
+            <Badge variant="emerald">Live AI Assistant</Badge>
           </div>
 
           {/* Quick Trigger Chips */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             <button
               onClick={() => handleSendPrompt("What is my safe daily purchase limit?")}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-xs font-medium text-indigo-300 border border-slate-700 rounded-xl whitespace-nowrap transition-colors"
+              className="px-3 py-1.5 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl whitespace-nowrap transition-colors"
             >
               💡 Daily Purchase Limit?
             </button>
             <button
               onClick={() => handleSendPrompt("Explain my 50/30/20 savings allocation")}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-xs font-medium text-emerald-300 border border-slate-700 rounded-xl whitespace-nowrap transition-colors"
+              className="px-3 py-1.5 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-bold text-emerald-700 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 rounded-xl whitespace-nowrap transition-colors"
             >
               💰 50/30/20 Savings Breakdown?
             </button>
             <button
               onClick={() => handleSendPrompt("What single purchase limit should I observe?")}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-xs font-medium text-amber-300 border border-slate-700 rounded-xl whitespace-nowrap transition-colors"
+              className="px-3 py-1.5 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl whitespace-nowrap transition-colors"
             >
               🏷️ Single Item Cap?
             </button>
           </div>
 
           {/* Chat Stream Area */}
-          <div className="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 h-64 overflow-y-auto space-y-3">
+          <div className="bg-slate-50 dark:bg-slate-950 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 h-64 overflow-y-auto space-y-3">
             {chatMessages.map((msg, idx) => (
               <div
                 key={idx}
@@ -283,15 +283,15 @@ export const AIFinancialAdvisor = () => {
                 }`}
               >
                 {msg.sender === 'ai' && (
-                  <div className="w-7 h-7 rounded-xl bg-violet-600 flex items-center justify-center text-white flex-shrink-0">
+                  <div className="w-7 h-7 rounded-xl bg-emerald-600 flex items-center justify-center text-white flex-shrink-0">
                     <Bot className="w-4 h-4" />
                   </div>
                 )}
                 <div
-                  className={`p-3.5 rounded-2xl max-w-md leading-relaxed ${
+                  className={`p-3.5 rounded-2xl max-w-md leading-relaxed font-medium ${
                     msg.sender === 'user'
-                      ? 'bg-indigo-600 text-white rounded-br-none'
-                      : 'bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-none'
+                      ? 'bg-emerald-600 text-white rounded-br-none font-bold'
+                      : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 rounded-bl-none shadow-sm'
                   }`}
                 >
                   {msg.text}
@@ -313,7 +313,7 @@ export const AIFinancialAdvisor = () => {
               placeholder="Ask AI about savings targets, purchase limits, or expense rules..."
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
-              className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+              className="flex-1 px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white font-semibold"
             />
             <Button type="submit" variant="primary" icon={Send}>
               Ask AI
@@ -324,7 +324,7 @@ export const AIFinancialAdvisor = () => {
 
       {/* Category Purchase Limit Caps Grid */}
       <Card className="p-6 space-y-4">
-        <h3 className="text-lg font-bold text-white font-heading">Recommended Category Purchase Caps</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">Recommended Category Purchase Caps</h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {Object.entries(advisorData?.category_purchase_caps || {
@@ -334,12 +334,12 @@ export const AIFinancialAdvisor = () => {
             "Housing & Utilities": 19250,
             "Subscriptions": 2750
           }).map(([cat, limit]) => (
-            <div key={cat} className="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
+            <div key={cat} className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <div>
-                <div className="text-xs font-bold text-white">{cat}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Recommended Ceiling</div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">{cat}</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Recommended Ceiling</div>
               </div>
-              <div className="text-sm font-extrabold text-emerald-400 font-heading">
+              <div className="text-sm font-bold text-emerald-700 dark:text-emerald-400 font-heading">
                 ₹{Number(limit).toLocaleString('en-IN')}
               </div>
             </div>

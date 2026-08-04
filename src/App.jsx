@@ -1,8 +1,10 @@
 import React, { useState, Component } from 'react';
+import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ExpenseProvider } from './context/ExpenseContext';
+import { Sidebar } from './components/Sidebar';
+import { TopHeader } from './components/TopHeader';
 import { LoginScreen } from './components/LoginScreen';
-import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
 import { ExpenseManager } from './components/ExpenseManager';
 import { ReceiptOCR } from './components/ReceiptOCR';
@@ -64,75 +66,88 @@ export const MainLayout = () => {
   const [activeView, setActiveView] = useState('dashboard');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
-      {/* Top Navbar */}
-      <Navbar
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 flex flex-row selection:bg-emerald-500 selection:text-white transition-colors duration-300 animate-fade-in">
+      {/* Left Side Navigation Menu */}
+      <Sidebar
         activeView={activeView}
         setActiveView={setActiveView}
+        isMobileOpen={isMobileSidebarOpen}
+        setIsMobileOpen={setIsMobileSidebarOpen}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 w-full mx-auto px-4 sm:px-8 lg:px-12 py-6">
-        {activeView === 'dashboard' && (
-          <Dashboard
-            setActiveView={setActiveView}
-            onOpenAddModal={() => setIsAddModalOpen(true)}
-          />
-        )}
+      {/* Main Right Content Body */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Header Bar (No Tab Buttons) */}
+        <TopHeader
+          activeView={activeView}
+          setActiveView={setActiveView}
+          onOpenMobileSidebar={() => setIsMobileSidebarOpen(true)}
+          onOpenAddModal={() => setIsAddModalOpen(true)}
+        />
 
-        {activeView === 'expenses' && (
-          <ExpenseManager
-            isAddModalOpen={isAddModalOpen}
-            setIsAddModalOpen={setIsAddModalOpen}
-          />
-        )}
+        {/* View Pages Container */}
+        <main className="flex-1 w-full mx-auto px-4 sm:px-8 lg:px-12 py-6 animate-slide-up">
+          {activeView === 'dashboard' && (
+            <Dashboard
+              setActiveView={setActiveView}
+              onOpenAddModal={() => setIsAddModalOpen(true)}
+            />
+          )}
 
-        {activeView === 'ocr' && (
-          <ReceiptOCR setActiveView={setActiveView} />
-        )}
+          {activeView === 'expenses' && (
+            <ExpenseManager
+              isAddModalOpen={isAddModalOpen}
+              setIsAddModalOpen={setIsAddModalOpen}
+            />
+          )}
 
-        {activeView === 'budget' && (
-          <BudgetPredictor />
-        )}
+          {activeView === 'ocr' && (
+            <ReceiptOCR setActiveView={setActiveView} />
+          )}
 
-        {activeView === 'advisor' && (
-          <AIFinancialAdvisor />
-        )}
+          {activeView === 'budget' && (
+            <BudgetPredictor />
+          )}
 
-        {activeView === 'health' && (
-          <HealthScore setActiveView={setActiveView} />
-        )}
+          {activeView === 'advisor' && (
+            <AIFinancialAdvisor />
+          )}
 
-        {activeView === 'simulator' && (
-          <Simulator />
-        )}
+          {activeView === 'health' && (
+            <HealthScore setActiveView={setActiveView} />
+          )}
 
-        {activeView === 'savings' && (
-          <SavingsPlan />
-        )}
+          {activeView === 'simulator' && (
+            <Simulator />
+          )}
 
-        {activeView === 'profile' && (
-          <ProfileView />
-        )}
-      </main>
+          {activeView === 'savings' && (
+            <SavingsPlan />
+          )}
 
-      {/* Account Auth Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
+          {activeView === 'profile' && (
+            <ProfileView />
+          )}
+        </main>
 
-      {/* Floating AI Assistant Chatbot Widget (Hidden when in 'advisor' view) */}
-      <AIAssistantWidget activeView={activeView} />
+        {/* Account Auth Modal */}
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+        />
 
+        {/* Floating AI Assistant Chatbot Widget */}
+        <AIAssistantWidget activeView={activeView} />
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800/60 py-6 text-center text-xs text-slate-500 glass-panel">
-        <p>AI-Powered Personal Expense Tracker & Financial Assistant • Built with React, FastAPI & Supabase</p>
-      </footer>
+        {/* Footer */}
+        <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 shadow-sm font-medium transition-colors duration-300">
+          <p>AI-Powered Personal Expense Tracker & Financial Assistant • Built with React, Spring Boot, FastAPI & Supabase</p>
+        </footer>
+      </div>
     </div>
   );
 };
@@ -150,11 +165,13 @@ export const AppContent = () => {
 export default function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <ExpenseProvider>
-          <AppContent />
-        </ExpenseProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ExpenseProvider>
+            <AppContent />
+          </ExpenseProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

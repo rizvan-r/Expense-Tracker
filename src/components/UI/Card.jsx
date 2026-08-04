@@ -6,7 +6,7 @@ export const Card = ({ children, className, ...props }) => {
   return (
     <div
       className={twMerge(
-        'glass-card rounded-2xl p-6 transition-all duration-300 hover:border-slate-700/80',
+        'neu-card bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-md dark:shadow-2xl transition-all duration-300 animate-slide-up',
         className
       )}
       {...props}

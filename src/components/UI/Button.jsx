@@ -13,12 +13,12 @@ export const Button = ({
   const baseStyle = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {
-    primary: 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-lg shadow-indigo-600/25 border border-indigo-500/30',
-    secondary: 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700',
-    success: 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-600/25',
-    danger: 'bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white shadow-lg shadow-rose-600/25',
-    ghost: 'text-slate-400 hover:text-white hover:bg-slate-800/60',
-    outline: 'border border-indigo-500/40 text-indigo-400 hover:bg-indigo-500/10'
+    primary: 'bg-white dark:bg-slate-900 border-1.5 border-emerald-600 dark:border-emerald-500 text-emerald-700 dark:text-emerald-400 font-bold hover:bg-emerald-50 dark:hover:bg-slate-800 shadow-sm',
+    secondary: 'bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm',
+    success: 'bg-white dark:bg-slate-900 border-1.5 border-emerald-600 dark:border-emerald-500 text-emerald-700 dark:text-emerald-400 font-bold hover:bg-emerald-50 dark:hover:bg-slate-800 shadow-sm',
+    danger: 'bg-white dark:bg-slate-900 border-1.5 border-rose-600 dark:border-rose-500 text-rose-700 dark:text-rose-400 font-bold hover:bg-rose-50 dark:hover:bg-rose-950/40 shadow-sm',
+    ghost: 'text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800',
+    outline: 'border border-emerald-600 dark:border-emerald-500 text-emerald-700 dark:text-emerald-400 font-bold hover:bg-emerald-50 dark:hover:bg-slate-800'
   };
 
   const sizes = {

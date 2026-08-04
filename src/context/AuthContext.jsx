@@ -1,37 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
-import { MULTI_PROFILES } from '../services/mockData';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ai_tracker_saved_user_profile');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
 
-  const [profiles, setProfiles] = useState(() => {
-    try {
-      const saved = localStorage.getItem('ai_tracker_all_profiles');
-      const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : MULTI_PROFILES;
-    } catch (e) {
-      return MULTI_PROFILES;
-    }
-  });
-
-  const [activeProfileId, setActiveProfileId] = useState(() => {
-    try {
-      return localStorage.getItem('ai_tracker_active_profile_id') || MULTI_PROFILES[0].id;
-    } catch (e) {
-      return MULTI_PROFILES[0].id;
-    }
-  });
-
-  const activeProfile = profiles.find(p => p.id === activeProfileId) || profiles[0] || MULTI_PROFILES[0];
-
-  // Helper to ensure user record exists in `public.users` table
+  // Sync user profile into `public.users` table in Supabase
   const syncUserProfile = async (authUser) => {
     if (!isSupabaseConfigured || !authUser) return;
 
@@ -39,30 +25,67 @@ export const AuthProvider = ({ children }) => {
       const fullName = authUser.user_metadata?.full_name || authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User';
       const avatarUrl = authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '';
 
-      const { data, error } = await supabase
+      // 1. Fetch user profile from public.users
+      const { data: existingUser, error: fetchErr } = await supabase
         .from('users')
-        .upsert(
-          {
-            id: authUser.id,
-            email: authUser.email,
-            full_name: fullName,
-            avatar_url: avatarUrl,
-            created_at: new Date().toISOString()
-          },
-          { onConflict: 'id' }
-        )
-        .select()
-        .single();
+        .select('*')
+        .eq('id', authUser.id)
+        .maybeSingle();
 
-      if (!error && data) {
-        setUserProfile(data);
+      if (existingUser) {
+        // Update user metadata (full_name, avatar_url, email)
+        const { data: updated, error: updateErr } = await supabase
+          .from('users')
+          .update({
+            full_name: existingUser.full_name || fullName,
+            avatar_url: avatarUrl || existingUser.avatar_url,
+            email: authUser.email
+          })
+          .eq('id', authUser.id)
+          .select()
+          .maybeSingle();
+
+        const profileData = (!updateErr && updated) ? updated : existingUser;
+        setUserProfile(profileData);
+        try {
+          localStorage.setItem('ai_tracker_saved_user_profile', JSON.stringify(profileData));
+        } catch (e) {}
+      } else {
+        // 2. Insert new user into public.users with complete default columns
+        const newUserObj = {
+          id: authUser.id,
+          email: authUser.email,
+          full_name: fullName,
+          avatar_url: avatarUrl,
+          monthly_income: 85000,
+          monthly_budget: 55000,
+          currency: '₹',
+          occupation: 'Professional',
+          financial_strategy: 'Moderate Wealth Builder',
+          savings_goal_target: 200000,
+          emergency_fund_target: 150000,
+          avatar_color: '#6366f1',
+          created_at: new Date().toISOString()
+        };
+
+        const { data: inserted, error: insertErr } = await supabase
+          .from('users')
+          .upsert(newUserObj, { onConflict: 'id' })
+          .select()
+          .maybeSingle();
+
+        const profileData = (!insertErr && inserted) ? inserted : newUserObj;
+        setUserProfile(profileData);
+        try {
+          localStorage.setItem('ai_tracker_saved_user_profile', JSON.stringify(profileData));
+        } catch (e) {}
       }
     } catch (err) {
       console.warn('Error syncing user profile to Supabase users table:', err);
     }
   };
 
-  // Initialize session and set up authentication listener
+  // Initialize session and set up auth state listener
   useEffect(() => {
     let mounted = true;
 
@@ -70,7 +93,6 @@ export const AuthProvider = ({ children }) => {
       setAuthError(null);
       if (isSupabaseConfigured) {
         try {
-          // Fetch active session from Supabase
           const { data: { session: initialSession }, error } = await supabase.auth.getSession();
           if (error) throw error;
 
@@ -89,7 +111,6 @@ export const AuthProvider = ({ children }) => {
           if (mounted) setIsLoading(false);
         }
 
-        // Listen for realtime auth state changes (login, logout, token refresh)
         const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
           if (!mounted) return;
 
@@ -103,6 +124,7 @@ export const AuthProvider = ({ children }) => {
           } else {
             setUser(null);
             setUserProfile(null);
+            localStorage.removeItem('ai_tracker_saved_user_profile');
           }
           setIsLoading(false);
         });
@@ -111,18 +133,24 @@ export const AuthProvider = ({ children }) => {
           authListener?.subscription?.unsubscribe();
         };
       } else {
-        // Fallback: Check local auth state for demo testing
         const savedAuth = localStorage.getItem('ai_tracker_is_authenticated') === 'true';
         if (savedAuth) {
-          const curProf = profiles.find(p => p.id === activeProfileId) || profiles[0];
+          const fallbackUser = userProfile || {
+            id: 'local-user-1',
+            email: 'user@example.com',
+            full_name: 'Richu Sharma',
+            monthly_income: 85000,
+            monthly_budget: 55000,
+            currency: '₹',
+            occupation: 'Software Engineer',
+            financial_strategy: 'Moderate Wealth Builder'
+          };
           setUser({
-            id: curProf.id,
-            email: curProf.email,
-            user_metadata: {
-              full_name: curProf.full_name,
-              avatar_url: ''
-            }
+            id: fallbackUser.id,
+            email: fallbackUser.email,
+            user_metadata: { full_name: fallbackUser.full_name }
           });
+          if (!userProfile) setUserProfile(fallbackUser);
         }
         setIsLoading(false);
       }
@@ -135,7 +163,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, [isSupabaseConfigured]);
 
-  // Google OAuth Login Flow (Standard Unblocked Scopes)
+  // Google OAuth Login Flow
   const loginWithGoogle = async () => {
     setAuthError(null);
 
@@ -157,22 +185,24 @@ export const AuthProvider = ({ children }) => {
       }
       return data;
     } else {
-      // Local Demo Google Login Fallback
       localStorage.setItem('ai_tracker_is_authenticated', 'true');
-      const curProf = profiles.find(p => p.id === activeProfileId) || profiles[0];
-      setUser({
-        id: curProf.id,
-        email: curProf.email,
-        user_metadata: {
-          full_name: curProf.full_name,
-          avatar_url: ''
-        }
-      });
+      const fallback = userProfile || {
+        id: `user-${Date.now()}`,
+        email: 'user@example.com',
+        full_name: 'Google User',
+        monthly_income: 85000,
+        monthly_budget: 55000,
+        currency: '₹',
+        occupation: 'Professional',
+        financial_strategy: 'Moderate Wealth Builder'
+      };
+      setUserProfile(fallback);
+      setUser({ id: fallback.id, email: fallback.email, user_metadata: { full_name: fallback.full_name } });
       return { success: true };
     }
   };
 
-  // Manual Email & Password Login Flow
+  // Email & Password Login
   const loginWithSupabase = async (email, password) => {
     setAuthError(null);
 
@@ -187,16 +217,19 @@ export const AuthProvider = ({ children }) => {
       await syncUserProfile(data.user);
       return data;
     } else {
-      const existing = profiles.find(p => p.email.toLowerCase() === email.toLowerCase());
-      const targetId = existing ? existing.id : profiles[0].id;
-      setActiveProfileId(targetId);
       localStorage.setItem('ai_tracker_is_authenticated', 'true');
-      const curProf = profiles.find(p => p.id === targetId) || profiles[0];
-      setUser({
-        id: curProf.id,
-        email: curProf.email,
-        user_metadata: { full_name: curProf.full_name }
-      });
+      const fallback = {
+        id: `user-${Date.now()}`,
+        email: email,
+        full_name: email.split('@')[0],
+        monthly_income: 85000,
+        monthly_budget: 55000,
+        currency: '₹',
+        occupation: 'Professional',
+        financial_strategy: 'Moderate Wealth Builder'
+      };
+      setUserProfile(fallback);
+      setUser({ id: fallback.id, email: fallback.email, user_metadata: { full_name: fallback.full_name } });
       return { success: true };
     }
   };
@@ -223,65 +256,32 @@ export const AuthProvider = ({ children }) => {
       }
       return data;
     } else {
-      createProfile({ email, full_name: fullName });
+      localStorage.setItem('ai_tracker_is_authenticated', 'true');
+      const fallback = {
+        id: `user-${Date.now()}`,
+        email: email,
+        full_name: fullName || email.split('@')[0],
+        monthly_income: 85000,
+        monthly_budget: 55000,
+        currency: '₹',
+        occupation: 'Professional',
+        financial_strategy: 'Moderate Wealth Builder'
+      };
+      setUserProfile(fallback);
+      setUser({ id: fallback.id, email: fallback.email, user_metadata: { full_name: fallback.full_name } });
       return { success: true };
     }
   };
 
-  // Demo Profile Login Selector
-  const loginWithProfile = (profileId) => {
-    if (profiles.some(p => p.id === profileId)) {
-      setActiveProfileId(profileId);
-      localStorage.setItem('ai_tracker_is_authenticated', 'true');
-      const curProf = profiles.find(p => p.id === profileId);
-      setUser({
-        id: curProf.id,
-        email: curProf.email,
-        user_metadata: { full_name: curProf.full_name }
-      });
-    }
-  };
-
-  // Create Profile helper
-  const createProfile = (newProfData) => {
-    const newId = `user-${Date.now()}`;
-    const newProf = {
-      id: newId,
-      full_name: newProfData.full_name || 'New User',
-      email: newProfData.email || `${newProfData.full_name?.toLowerCase().replace(/\s+/g, '')}@example.com`,
-      monthly_income: Number(newProfData.monthly_income) || 75000,
-      monthly_budget: Number(newProfData.monthly_budget) || 45000,
-      currency: '₹',
-      savings_goal_target: Number(newProfData.savings_goal_target) || 150000,
-      emergency_fund_target: Number(newProfData.emergency_fund_target) || 100000,
-      occupation: newProfData.occupation || 'Professional',
-      financial_strategy: newProfData.financial_strategy || 'Moderate Wealth Builder',
-      avatar_color: newProfData.avatar_color || '#10b981'
-    };
-
-    setProfiles(prev => [...prev, newProf]);
-    setActiveProfileId(newId);
-    localStorage.setItem('ai_tracker_is_authenticated', 'true');
-    setUser({
-      id: newId,
-      email: newProf.email,
-      user_metadata: { full_name: newProf.full_name }
-    });
-  };
-
-  // Update Active Profile helper
+  // Update Profile details in Supabase
   const updateProfile = async (updatedFields) => {
-    setProfiles(prev => {
-      const nextProfiles = prev.map(p => (p.id === activeProfile?.id || p.id === activeProfileId) ? { ...p, ...updatedFields } : p);
+    setUserProfile(prev => {
+      const next = { ...prev, ...updatedFields };
       try {
-        localStorage.setItem('ai_tracker_all_profiles', JSON.stringify(nextProfiles));
+        localStorage.setItem('ai_tracker_saved_user_profile', JSON.stringify(next));
       } catch (e) {}
-      return nextProfiles;
+      return next;
     });
-
-    if (userProfile) {
-      setUserProfile(prev => ({ ...prev, ...updatedFields }));
-    }
 
     if (isSupabaseConfigured && (user?.id || session?.user?.id)) {
       const targetUserId = user?.id || session?.user?.id;
@@ -310,18 +310,31 @@ export const AuthProvider = ({ children }) => {
       }
     }
     localStorage.removeItem('ai_tracker_is_authenticated');
+    localStorage.removeItem('ai_tracker_saved_user_profile');
     setSession(null);
     setUser(null);
     setUserProfile(null);
   };
 
-  // Computed active user information
+  // Active profile computed state
+  const activeProfile = userProfile || {
+    id: user?.id || 'guest',
+    full_name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User',
+    email: user?.email || 'user@example.com',
+    monthly_income: 85000,
+    monthly_budget: 55000,
+    currency: '₹',
+    occupation: 'Professional',
+    financial_strategy: 'Moderate Wealth Builder',
+    avatar_color: '#10b981'
+  };
+
   const currentUserInfo = user ? {
     id: user.id,
     email: user.email,
-    full_name: user.user_metadata?.full_name || user.user_metadata?.name || userProfile?.full_name || activeProfile?.full_name || 'User',
-    avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || userProfile?.avatar_url || '',
-    created_at: user.created_at || userProfile?.created_at || new Date().toISOString()
+    full_name: user.user_metadata?.full_name || user.user_metadata?.name || activeProfile?.full_name || 'User',
+    avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || activeProfile?.avatar_url || '',
+    created_at: user.created_at || activeProfile?.created_at || new Date().toISOString()
   } : null;
 
   return (
@@ -333,12 +346,10 @@ export const AuthProvider = ({ children }) => {
       isLoading,
       authError,
       activeProfile,
-      profiles,
+      profiles: userProfile ? [userProfile] : [],
       loginWithGoogle,
       loginWithSupabase,
       signUpWithSupabase,
-      loginWithProfile,
-      createProfile,
       updateProfile,
       logout,
       isSupabaseConfigured

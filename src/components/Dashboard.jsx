@@ -132,35 +132,35 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#0f172a',
-        titleColor: '#fff',
-        bodyColor: '#cbd5e1',
-        borderColor: '#334155',
+        backgroundColor: '#ffffff',
+        titleColor: '#0f172a',
+        bodyColor: '#334155',
+        borderColor: '#cbd5e1',
         borderWidth: 1,
         padding: 12
       }
     },
     scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+      x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#64748b', font: { weight: 'bold' } } },
+      y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#64748b', font: { weight: 'bold' } } }
     }
   };
 
   const safeBudget = Number(profile?.monthly_budget) || 55000;
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12 w-full">
+    <div className="space-y-6 animate-fade-in pb-12 w-full">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-slate-900/50 p-6 sm:p-8 rounded-3xl border border-indigo-500/20 glass-panel">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-[6px_6px_18px_#e2e8f0,-6px_-6px_18px_#ffffff] dark:shadow-[6px_6px_18px_#020617,-6px_-6px_18px_#1e293b]">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">Welcome Back</span>
-            <Badge variant="indigo">AI Assistant Active</Badge>
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Welcome Back</span>
+            <Badge variant="emerald">AI Assistant Active</Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-heading tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-heading tracking-tight">
             Financial Health & Analytics Hub
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-medium mt-1">
             Real-time expense monitoring in Indian Rupees (₹), predictive ML trend projections, and cost optimization recommendations.
           </p>
         </div>
@@ -184,7 +184,7 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
           icon={IndianRupee}
           trend={safeTotalSpent > safeBudget ? 'up' : 'down'}
           trendText={`${Math.round((safeTotalSpent / safeBudget) * 100)}% of monthly limit`}
-          color="indigo"
+          color="emerald"
         />
 
         <StatCard
@@ -214,7 +214,7 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
           icon={PieIcon}
           trend="up"
           trendText={`${safeTotalSpent ? Math.round(((highestCategory?.amount || 0) / safeTotalSpent) * 100) : 0}% of overall total`}
-          color="purple"
+          color="indigo"
         />
       </div>
 
@@ -223,16 +223,16 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
 
       {/* Predictive ML Alert Banner */}
       {budgetPrediction?.projected_overrun > 0 && (
-        <div className="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-4 flex items-center justify-between gap-4">
+        <div className="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-rose-500/20 text-rose-400 rounded-xl">
+            <div className="p-2.5 bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 rounded-xl">
               <AlertTriangle className="w-5 h-5 animate-bounce" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-rose-200">Predictive Budget Alert</h4>
-              <p className="text-xs text-rose-300/80">
+              <h4 className="text-sm font-bold text-rose-900 dark:text-rose-200">Predictive Budget Alert</h4>
+              <p className="text-xs text-rose-800 dark:text-rose-300 font-medium">
                 At your current velocity of ₹{budgetPrediction?.daily_burn_rate}/day, you are projected to exceed budget by{' '}
-                <span className="font-semibold text-rose-100">₹{budgetPrediction?.projected_overrun}</span> by month end.
+                <span className="font-bold text-rose-950 dark:text-rose-100">₹{budgetPrediction?.projected_overrun}</span> by month end.
               </p>
             </div>
           </div>
@@ -248,10 +248,10 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
         <Card className="lg:col-span-2 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-base font-bold text-white font-heading">Weekly Spending Breakdown</h3>
-              <p className="text-xs text-slate-400">Comparing current week velocity against previous periods</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">Weekly Spending Breakdown</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Comparing current week velocity against previous periods</p>
             </div>
-            <Badge variant="indigo">Monthly View</Badge>
+            <Badge variant="emerald">Monthly View</Badge>
           </div>
           <div className="h-64 w-full">
             <Bar data={weeklyData} options={chartOptions} />
@@ -262,25 +262,25 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
         <Card className="flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-base font-bold text-white font-heading">Category Allocation</h3>
-              <p className="text-xs text-slate-400">Distribution of overall spending</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">Category Allocation</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Distribution of overall spending</p>
             </div>
-            <PieIcon className="w-4 h-4 text-slate-400" />
+            <PieIcon className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </div>
           <div className="h-56 w-full relative flex items-center justify-center">
             {categoryValues.length > 0 ? (
               <Doughnut data={doughnutData} options={{ ...chartOptions, cutout: '72%' }} />
             ) : (
-              <p className="text-xs text-slate-500">No category data yet</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">No category data yet</p>
             )}
             <div className="absolute flex flex-col items-center pointer-events-none">
-              <span className="text-xs text-slate-400 uppercase font-semibold">Total</span>
-              <span className="text-lg font-bold text-white font-heading">₹{safeTotalSpent.toFixed(0)}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">Total</span>
+              <span className="text-lg font-bold text-slate-900 dark:text-white font-heading">₹{safeTotalSpent.toFixed(0)}</span>
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 font-medium">
             <span>{categoryLabels.length} Active Categories</span>
-            <button onClick={() => setActiveView('expenses')} className="text-indigo-400 hover:underline flex items-center gap-1">
+            <button onClick={() => setActiveView('expenses')} className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1">
               View Table <ArrowUpRight className="w-3 h-3" />
             </button>
           </div>
@@ -293,46 +293,46 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
         <Card className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20">
+              <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 rounded-xl text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white font-heading">AI Cost Optimization Recommendations</h3>
-                <p className="text-xs text-slate-400">Tailored suggestions generated from transaction patterns</p>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">AI Cost Optimization Recommendations</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Tailored suggestions generated from transaction patterns</p>
               </div>
             </div>
-            {isAiLoading && <span className="text-xs text-indigo-400 animate-pulse">Analyzing...</span>}
+            {isAiLoading && <span className="text-xs text-emerald-700 dark:text-emerald-400 font-bold animate-pulse">Analyzing...</span>}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             {(Array.isArray(aiRecommendations) ? aiRecommendations : []).map((rec) => (
               <div
                 key={rec.id}
-                className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 hover:border-indigo-500/30 transition-all flex flex-col justify-between group"
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-[3px_3px_8px_#e2e8f0,-3px_-3px_8px_#ffffff] dark:shadow-none hover:border-emerald-400 transition-all flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <Badge variant={rec.priority === 'HIGH' ? 'rose' : 'indigo'}>
+                    <Badge variant={rec.priority === 'HIGH' ? 'rose' : 'emerald'}>
                       {rec.category}
                     </Badge>
-                    <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                       Save {(rec.impact_savings || '').replace('$', '₹')}
                     </span>
                   </div>
-                  <h4 className="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                     {rec.title}
                   </h4>
-                  <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-medium mt-1.5 leading-relaxed">
                     {(rec.description || '').replace(/\$/g, '₹')}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500 uppercase font-semibold">Priority: {rec.priority}</span>
+                <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 uppercase font-bold">Priority: {rec.priority}</span>
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-xs text-indigo-400 hover:text-indigo-300"
+                    className="text-xs text-emerald-700 dark:text-emerald-400 font-bold hover:text-emerald-800 dark:hover:text-emerald-300"
                     onClick={() => {
                       if (rec.id && (rec.id.includes('food') || rec.id.includes('shopping'))) {
                         setActiveView('simulator');
@@ -353,19 +353,19 @@ export const Dashboard = ({ setActiveView, onOpenAddModal }) => {
         <Card className="flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h3 className="text-base font-bold text-white font-heading">Recent Daily Velocity</h3>
-              <p className="text-xs text-slate-400">Expense velocity over last 7 entries</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading">Recent Daily Velocity</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Expense velocity over last 7 entries</p>
             </div>
-            <Zap className="w-4 h-4 text-emerald-400" />
+            <Zap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           </div>
 
           <div className="h-48 w-full my-2">
             <Line data={lineData} options={chartOptions} />
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span className="text-slate-400">Daily Avg: ₹{budgetPrediction?.daily_burn_rate || 1250}/day</span>
-            <span className="text-emerald-400 font-semibold flex items-center gap-1">
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span className="text-slate-600 dark:text-slate-300 font-medium">Daily Avg: ₹{budgetPrediction?.daily_burn_rate || 1250}/day</span>
+            <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" /> Stable Velocity
             </span>
           </div>

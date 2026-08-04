@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "SpendAI Mobile",
+    "slug": "spendai-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.spendai.app"
+    },
+    "android": {
+      "package": "com.spendai.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#090d16",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "READ_SMS",
+        "RECEIVE_SMS",
+        "CAMERA"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6f96c68f-1b15-49b8-b5fe-42a0191ed0bf"
+      }
+    }
+  }
+}

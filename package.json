@@ -5,7 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:all": "concurrently -n \"FRONTEND,BACKEND\" -c \"cyan.bold,yellow.bold\" \"npm run dev\" \"python backend/run.py\"",
+    "start:all": "concurrently -n \"WEB,JAVA_BACKEND,MOBILE\" -c \"cyan.bold,green.bold,magenta.bold\" \"npm run dev\" \"cd java-backend && mvn spring-boot:run\" \"cd mobile && npm start\"",
+    "dev:all": "concurrently -n \"WEB,JAVA,FASTAPI,MOBILE\" -c \"cyan.bold,green.bold,yellow.bold,magenta.bold\" \"npm run dev\" \"cd java-backend && mvn spring-boot:run\" \"python backend/run.py\" \"cd mobile && npm start\"",
+    "dev:mobile": "concurrently -n \"WEB,JAVA,MOBILE\" -c \"cyan.bold,green.bold,magenta.bold\" \"npm run dev\" \"cd java-backend && mvn spring-boot:run\" \"cd mobile && npm start\"",
+    "dev:python": "concurrently -n \"WEB,FASTAPI,MOBILE\" -c \"cyan.bold,yellow.bold,magenta.bold\" \"npm run dev\" \"python backend/run.py\" \"cd mobile && npm start\"",
+    "mobile": "cd mobile && npm start",
+    "java": "cd java-backend && mvn spring-boot:run",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
