@@ -140,7 +140,7 @@ export const ReceiptOCR = ({ setActiveView }) => {
         {/* Left Column: Image Uploader & Preview */}
         <div className="lg:col-span-5 space-y-4">
           <Card className="p-6">
-            <h3 className="text-base font-bold text-slate-900 font-heading mb-3 flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white font-heading mb-3 flex items-center justify-between">
               <span>Upload Receipt Photo</span>
               <Badge variant="emerald">PNG / JPG / WebP</Badge>
             </h3>
@@ -154,7 +154,7 @@ export const ReceiptOCR = ({ setActiveView }) => {
                   handleFileDrop(e.dataTransfer.files[0]);
                 }
               }}
-              className="border-2 border-dashed border-slate-300 hover:border-emerald-600 rounded-2xl p-6 text-center cursor-pointer transition-all bg-slate-50 hover:bg-emerald-50/50 group"
+              className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-600 dark:hover:border-emerald-500 rounded-2xl p-6 text-center cursor-pointer transition-all bg-slate-50 dark:bg-slate-800/60 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/40 group"
             >
               <input
                 type="file"
@@ -164,14 +164,14 @@ export const ReceiptOCR = ({ setActiveView }) => {
                 id="receipt-file-input"
               />
               <label htmlFor="receipt-file-input" className="cursor-pointer block space-y-3">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
                   <UploadCloud className="w-7 h-7" />
                 </div>
                 <div>
-                  <span className="text-sm font-bold text-emerald-700 group-hover:underline">Click to upload Receipt or PDF</span>
-                  <span className="text-xs text-slate-500 font-medium"> or drag and drop file</span>
+                  <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400 group-hover:underline">Click to upload Receipt or PDF</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium"> or drag and drop file</span>
                 </div>
-                <p className="text-[11px] text-slate-500 font-medium">Supports PDF Invoices, Bank Statements, Paper Receipts & Photos</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Supports PDF Invoices, Bank Statements, Paper Receipts & Photos</p>
               </label>
             </div>
           </Card>
@@ -180,17 +180,17 @@ export const ReceiptOCR = ({ setActiveView }) => {
           {previewUrl && (
             <Card className="p-4 overflow-hidden relative">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                  <Eye className="w-4 h-4 text-emerald-600" /> Receipt Image Preview
+                <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Receipt Image Preview
                 </span>
                 {isScanning && <Badge variant="amber" className="animate-pulse">Scanning OCR...</Badge>}
               </div>
 
-              <div className="relative rounded-xl overflow-hidden border border-slate-200 max-h-64 flex items-center justify-center bg-slate-100">
+              <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 max-h-64 flex items-center justify-center bg-slate-100 dark:bg-slate-950">
                 <img src={previewUrl} alt="Receipt preview" className="w-full object-cover max-h-64" />
                 {isScanning && (
-                  <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-2 text-emerald-800">
-                    <RefreshCw className="w-8 h-8 animate-spin text-emerald-600" />
+                  <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center space-y-2 text-emerald-800 dark:text-emerald-400">
+                    <RefreshCw className="w-8 h-8 animate-spin text-emerald-600 dark:text-emerald-400" />
                     <span className="text-xs font-bold">Parsing Order & Payment Details...</span>
                   </div>
                 )}
@@ -202,10 +202,10 @@ export const ReceiptOCR = ({ setActiveView }) => {
         {/* Right Column: OCR Extraction Results & Form Confirmation */}
         <div className="lg:col-span-7 space-y-4">
           <Card className="p-6 space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
-                <h3 className="text-lg font-bold text-slate-900 font-heading">Extracted Order & Payment Details</h3>
-                <p className="text-xs text-slate-500 font-medium">Review AI extracted fields before committing to your ledger</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading">Extracted Order & Payment Details</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Review AI extracted fields before committing to your ledger</p>
               </div>
               {scanResult && (
                 <Badge variant="emerald" className="flex items-center gap-1">
@@ -217,12 +217,12 @@ export const ReceiptOCR = ({ setActiveView }) => {
             {/* Itemized Order Breakdown Table (if extracted) */}
             {scanResult?.items && scanResult.items.length > 0 && (
               <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <ShoppingBag className="w-4 h-4 text-emerald-600" /> Itemized Order Details ({scanResult.items.length} items)
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <ShoppingBag className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Itemized Order Details ({scanResult.items.length} items)
                 </span>
-                <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-                  <table className="w-full text-left text-xs text-slate-800">
-                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px]">
+                <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
+                  <table className="w-full text-left text-xs text-slate-800 dark:text-slate-200">
+                    <thead className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase text-[10px]">
                       <tr>
                         <th className="p-3">Item Description</th>
                         <th className="p-3">Qty</th>
@@ -230,13 +230,13 @@ export const ReceiptOCR = ({ setActiveView }) => {
                         <th className="p-3 text-right">Total</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                       {scanResult.items.map((item, idx) => (
-                        <tr key={idx} className="hover:bg-slate-50">
-                          <td className="p-3 font-bold text-slate-900">{item.item_name}</td>
+                        <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                          <td className="p-3 font-bold text-slate-900 dark:text-white">{item.item_name}</td>
                           <td className="p-3">{item.quantity}</td>
                           <td className="p-3">₹{item.unit_price}</td>
-                          <td className="p-3 text-right font-bold text-emerald-700">₹{item.total_price}</td>
+                          <td className="p-3 text-right font-bold text-emerald-700 dark:text-emerald-400">₹{item.total_price}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -247,32 +247,32 @@ export const ReceiptOCR = ({ setActiveView }) => {
 
             {/* Payment Details Pill Badge & Reference Specs */}
             {scanResult?.payment_method && (
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-2">
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-emerald-900 font-bold text-xs">
-                    <CreditCard className="w-4 h-4 text-emerald-700" />
-                    <span>Extracted Payment Method: <strong className="text-emerald-950 font-heading">{scanResult.payment_method}</strong></span>
+                  <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-300 font-bold text-xs">
+                    <CreditCard className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+                    <span>Extracted Payment Method: <strong className="text-emerald-950 dark:text-emerald-200 font-heading">{scanResult.payment_method}</strong></span>
                   </div>
                   <Badge variant="emerald">{scanResult?.payment_details?.status || 'VERIFIED PAID'}</Badge>
                 </div>
 
                 {scanResult?.payment_details && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-800 font-mono">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-800 dark:text-slate-200 font-mono">
                     {scanResult.payment_details.reference_no && (
-                      <div className="p-1.5 bg-white rounded-lg border border-slate-200">
-                        <span className="text-slate-500 block text-[9px] uppercase font-sans">Txn / Ref No</span>
-                        <span className="text-emerald-700 font-bold">{scanResult.payment_details.reference_no}</span>
+                      <div className="p-1.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                        <span className="text-slate-500 dark:text-slate-400 block text-[9px] uppercase font-sans">Txn / Ref No</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 font-bold">{scanResult.payment_details.reference_no}</span>
                       </div>
                     )}
                     {scanResult.payment_details.card_last_4 && scanResult.payment_details.card_last_4 !== 'N/A' && (
-                      <div className="p-1.5 bg-white rounded-lg border border-slate-200">
-                        <span className="text-slate-500 block text-[9px] uppercase font-sans">Card Number</span>
-                        <span className="text-slate-800 font-bold">**** {scanResult.payment_details.card_last_4}</span>
+                      <div className="p-1.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                        <span className="text-slate-500 dark:text-slate-400 block text-[9px] uppercase font-sans">Card Number</span>
+                        <span className="text-slate-800 dark:text-slate-200 font-bold">**** {scanResult.payment_details.card_last_4}</span>
                       </div>
                     )}
-                    <div className="p-1.5 bg-white rounded-lg border border-slate-200">
-                      <span className="text-slate-500 block text-[9px] uppercase font-sans">Status</span>
-                      <span className="text-emerald-700 font-bold">APPROVED</span>
+                    <div className="p-1.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[9px] uppercase font-sans">Status</span>
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold">APPROVED</span>
                     </div>
                   </div>
                 )}
@@ -283,7 +283,7 @@ export const ReceiptOCR = ({ setActiveView }) => {
             <form onSubmit={handleConfirmAndSave} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                     Merchant Name
                   </label>
                   <input
@@ -292,12 +292,12 @@ export const ReceiptOCR = ({ setActiveView }) => {
                     placeholder="Store / Merchant"
                     value={merchant}
                     onChange={(e) => setMerchant(e.target.value)}
-                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600 font-semibold"
+                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-600 font-semibold rounded-xl"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                     Total Amount (₹)
                   </label>
                   <input
@@ -307,14 +307,14 @@ export const ReceiptOCR = ({ setActiveView }) => {
                     placeholder="0.00"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600 font-bold text-emerald-700"
+                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-600 font-bold text-emerald-700 dark:text-emerald-400 rounded-xl"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                     Transaction Date
                   </label>
                   <input
@@ -322,21 +322,21 @@ export const ReceiptOCR = ({ setActiveView }) => {
                     required
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600 font-semibold"
+                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-600 font-semibold rounded-xl"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                     Category
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600 font-semibold"
+                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-600 font-semibold rounded-xl"
                   >
                     {(categories || []).map((cat) => (
-                      <option key={cat.id || cat.name} value={cat.name}>
+                      <option key={cat.id || cat.name} value={cat.name} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                         {cat.name}
                       </option>
                     ))}
@@ -344,25 +344,25 @@ export const ReceiptOCR = ({ setActiveView }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                     Payment Method
                   </label>
                   <select
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 focus:outline-none focus:border-emerald-600 font-semibold"
+                    className="w-full px-4 py-2.5 neu-input text-sm text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-600 font-semibold rounded-xl"
                   >
-                    <option value="UPI / GPay">UPI / GPay</option>
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="Debit Card">Debit Card</option>
-                    <option value="Net Banking">Net Banking</option>
-                    <option value="Cash">Cash</option>
+                    <option value="UPI / GPay" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">UPI / GPay</option>
+                    <option value="Credit Card" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Credit Card</option>
+                    <option value="Debit Card" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Debit Card</option>
+                    <option value="Net Banking" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Net Banking</option>
+                    <option value="Cash" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Cash</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Receipt / Txn Reference No
                 </label>
                 <input
@@ -370,24 +370,24 @@ export const ReceiptOCR = ({ setActiveView }) => {
                   placeholder="e.g. Receipt #622 or Txn ID"
                   value={txnReference}
                   onChange={(e) => setTxnReference(e.target.value)}
-                  className="w-full px-4 py-2.5 neu-input text-xs text-emerald-800 font-mono font-bold focus:outline-none focus:border-emerald-600"
+                  className="w-full px-4 py-2.5 neu-input text-xs text-emerald-800 dark:text-emerald-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono font-bold focus:outline-none focus:border-emerald-600 rounded-xl"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Order Notes & Extracted Details
                 </label>
                 <textarea
                   rows="2"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full px-4 py-2.5 neu-input text-xs text-slate-900 focus:outline-none focus:border-emerald-600 font-medium"
+                  className="w-full px-4 py-2.5 neu-input text-xs text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-600 font-medium rounded-xl"
                 />
               </div>
 
               {isAdded ? (
-                <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-bold rounded-xl flex items-center justify-center gap-2">
+                <div className="p-3 bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold rounded-xl flex items-center justify-center gap-2">
                   <Check className="w-4 h-4" /> Expense Added to Ledger Successfully! Redirecting...
                 </div>
               ) : (
