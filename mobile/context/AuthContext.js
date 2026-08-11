@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { makeRedirectUri } from 'expo-auth-session';
 import { supabase } from '../lib/supabase';
+
+let makeRedirectUri = () => 'spendai-mobile://auth';
+try {
+  makeRedirectUri = require('expo-auth-session').makeRedirectUri;
+} catch (e) {}
 
 const AuthContext = createContext();
 const SAVED_SESSION_KEY = '@spendai_saved_session';
@@ -146,34 +150,21 @@ export const AuthProvider = ({ children }) => {
     const cleanEmail = email.trim();
     const cleanPassword = password.trim();
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password: cleanPassword });
-      if (error) throw error;
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: cleanEmail,
+      password: cleanPassword
+    });
 
-      setSession(data.session);
-      setUser(data.user);
-      await persistSessionLocally(data.user);
-      await syncUserProfile(data.user);
-      return data;
-    } catch (error) {
-      console.warn('Supabase sign-in error on mobile, attempting user fallback:', error.message);
-      
-      // Fallback: If user credentials fail in Supabase (e.g. unconfirmed email or demo mode),
-      // create a session user so the app remains 100% accessible!
-      const fallbackUser = {
-        id: `usr-${cleanEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
-        email: cleanEmail,
-        user_metadata: {
-          full_name: cleanEmail.split('@')[0],
-          avatar_url: ''
-        }
-      };
-
-      setUser(fallbackUser);
-      await persistSessionLocally(fallbackUser);
-      await syncUserProfile(fallbackUser);
-      return { user: fallbackUser, session: null };
+    if (error) {
+      setAuthError(error.message);
+      throw error;
     }
+
+    setSession(data.session);
+    setUser(data.user);
+    await persistSessionLocally(data.user);
+    await syncUserProfile(data.user);
+    return data;
   };
 
   const loginAsDemoUser = async (demoEmail = 'richu@spendai.app', demoName = 'Richu (Demo User)') => {
@@ -252,51 +243,36 @@ export const AuthProvider = ({ children }) => {
     const cleanEmail = email.trim();
     const cleanPassword = password.trim();
 
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password: cleanPassword,
-        options: {
-          data: { full_name: fullName }
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.user) {
-        // Attempt immediate sign-in or fallback
-        try {
-          const loginRes = await supabase.auth.signInWithPassword({ email: cleanEmail, password: cleanPassword });
-          if (loginRes.data?.session) {
-            setSession(loginRes.data.session);
-            setUser(loginRes.data.user);
-            await persistSessionLocally(loginRes.data.user);
-            await syncUserProfile(loginRes.data.user);
-            return loginRes.data;
-          }
-        } catch (loginErr) {}
-
-        setUser(data.user);
-        await persistSessionLocally(data.user);
-        await syncUserProfile(data.user);
+    const { data, error } = await supabase.auth.signUp({
+      email: cleanEmail,
+      password: cleanPassword,
+      options: {
+        data: { full_name: fullName }
       }
-      return data;
-    } catch (err) {
-      console.warn('Supabase sign-up fallback on mobile:', err.message);
-      const fallbackUser = {
-        id: `usr-${cleanEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
-        email: cleanEmail,
-        user_metadata: {
-          full_name: fullName || cleanEmail.split('@')[0],
-          avatar_url: ''
-        }
-      };
+    });
 
-      setUser(fallbackUser);
-      await persistSessionLocally(fallbackUser);
-      await syncUserProfile(fallbackUser);
-      return { user: fallbackUser, session: null };
+    if (error) {
+      setAuthError(error.message);
+      throw error;
     }
+
+    if (data.user) {
+      try {
+        const loginRes = await supabase.auth.signInWithPassword({ email: cleanEmail, password: cleanPassword });
+        if (loginRes.data?.session) {
+          setSession(loginRes.data.session);
+          setUser(loginRes.data.user);
+          await persistSessionLocally(loginRes.data.user);
+          await syncUserProfile(loginRes.data.user);
+          return loginRes.data;
+        }
+      } catch (loginErr) {}
+
+      setUser(data.user);
+      await persistSessionLocally(data.user);
+      await syncUserProfile(data.user);
+    }
+    return data;
   };
 
   const logout = async () => {

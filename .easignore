@@ -1,0 +1,12 @@
+# EAS Build Ignore Rule (Root)
+node_modules/
+.git/
+.expo/
+dist/
+build/
+backend/
+java-backend/
+supabase/
+*.apk
+*.aab
+*.ipa
