@@ -1,0 +1,30 @@
+name: Build iOS Application
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build_ios:
+    name: Build iOS IPA
+    runs_on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: eas/checkout@v1
+
+      - name: Setup Node.js
+        uses: eas/setup_node@v1
+        with:
+          node-version: '20'
+
+      - name: Install Mobile Dependencies
+        run: |
+          cd mobile
+          npm install
+
+      - name: Trigger EAS iOS Build
+        uses: eas/build@v1
+        with:
+          platform: ios
+          profile: production

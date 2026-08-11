@@ -1,0 +1,39 @@
+{
+  "name": "ai-expense-tracker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start:all": "concurrently -n \"WEB,FASTAPI\" -c \"cyan.bold,yellow.bold\" \"npm run dev\" \"python backend/run.py\"",
+    "dev:all": "concurrently -n \"WEB,FASTAPI\" -c \"cyan.bold,yellow.bold\" \"npm run dev\" \"python backend/run.py\"",
+    "dev:mobile": "concurrently -n \"WEB,FASTAPI,MOBILE\" -c \"cyan.bold,yellow.bold,magenta.bold\" \"npm run dev\" \"python backend/run.py\" \"cd mobile && npm start -- --port 8085\"",
+    "dev:python": "concurrently -n \"WEB,FASTAPI\" -c \"cyan.bold,yellow.bold\" \"npm run dev\" \"python backend/run.py\"",
+    "mobile": "cd mobile && npm start",
+    "java": "cd java-backend && mvn spring-boot:run",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.8",
+    "axios": "^1.6.8",
+    "chart.js": "^4.4.2",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.359.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.2.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.2.0"
+  }
+}
