@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   Switch,
+  Platform,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import {

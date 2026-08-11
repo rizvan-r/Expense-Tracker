@@ -6,9 +6,13 @@ A state-of-the-art, AI-powered personal finance, expense management, and wealth 
 
 ## ✨ Key Features & Architectural Highlights
 
+### 🔒 100% Strict Per-User Data Isolation
+- **Private User Databases**: All expenses, savings goals, categories, and AI insights are strictly filtered by user ID (`user_id`). Every user has an isolated, private financial workspace.
+- **Supabase Row Level Security (RLS)**: PostgreSQL policies enforce user data ownership across Web and Mobile clients.
+
 ### 📱 Multi-Platform Experience (Web App & Mobile App)
 - **Web App**: Built with React 18, Vite, Tailwind CSS, Glassmorphic UI design, and **Collapsible Left Sidebar Navigation**.
-- **Mobile App**: Built with React Native (Expo), Supabase Auth, Camera Receipt Scanner, Bank SMS Auto-Sync, and native charts.
+- **Mobile App**: Built with React Native (Expo SDK 54), Supabase Auth, In-App Browser OAuth, Camera Receipt Scanner, Bank SMS Auto-Sync, and native charts.
 
 ### 🧭 Collapsible Left Sidebar Navigation
 - **Expanded & Compact Rail Modes**: Switch between full 260px sidebar and 80px mini-rail icon mode.
@@ -25,17 +29,13 @@ A state-of-the-art, AI-powered personal finance, expense management, and wealth 
 
 ### 📄 Vision OCR Receipt & Invoice Extractor
 - Drag-and-drop support for **PDF Invoices, Bank Statements & Photo Receipts**.
-- Extracts Merchant Name, Total Amount (₹), Date, Category, Payment Method, Reference IDs, and an **Itemized Order Breakdown Table**.
+- Full-document keyword scanner and PDF raw text stream parser for accurate merchant extraction (e.g. Educational Institutions, Velalar College, Retailers).
+- Pre-fills Merchant Name, Amount (₹), Date, Category, Payment Method, and Reference IDs directly into your ledger.
 
 ### 🔮 Machine Learning & Predictive Analytics
 - **ML Burn-Rate Budget Predictor**: Linear regression model forecasting end-of-month spend and budget overruns.
 - **0–100 Financial Health Score**: Diagnostic index analyzing productive vs. discretionary spend.
 - **What-If Scenario Simulator**: 12-month compound interest savings projection tool.
-
-### 🔐 Supabase Auth & Direct Profile Sync
-- **Google OAuth 2.0 & Email/Password Sign-In**.
-- Profile information (`monthly_income`, `monthly_budget`, `occupation`, `financial_strategy`, `avatar_url`) is saved persistently in Supabase `public.users` table.
-- Display and edit custom Profile Avatar pictures in the **Profile & Financial Config** view.
 
 ---
 
@@ -44,81 +44,96 @@ A state-of-the-art, AI-powered personal finance, expense management, and wealth 
 | Layer | Technologies Used |
 | :--- | :--- |
 | **Web Frontend** | React 18, Vite, Tailwind CSS, Lucide Icons, Recharts, Axios |
-| **Mobile App** | React Native, Expo SDK 54, React Navigation, AsyncStorage |
+| **Mobile App** | React Native, Expo SDK 54, React Navigation, AsyncStorage, Expo WebBrowser |
 | **Unified Backend** | Python 3.10+, FastAPI, Uvicorn, Pydantic v2 |
 | **AI & LLM Services** | Groq Cloud LPU (`llama-3.3-70b-versatile`), OpenAI API (`gpt-4o-mini`) |
 | **OCR Engines** | PyPDF, Mindee V5, OCR.space, Base64 Vision Engine |
-| **Database & Auth** | Supabase PostgreSQL, Supabase Auth (OAuth & RLS Policies) |
+| **Database & Auth** | Supabase PostgreSQL, Supabase Auth (Google OAuth 2.0 & Email/Password) |
 | **Market Data API** | Finnhub Stock Quote API |
 
 ---
 
-## 🚀 Quick Start Guide
+## 💻 Commands to Run the Application
 
-### 1. Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **Python**: v3.10.0 or higher
+### 🚀 1. Run Web App + Python Backend Together (Recommended)
 
----
-
-### 2. Environment Configuration
-Create a `.env` file in the project root:
-
-```env
-# Groq Cloud API Key (For Llama-3.3-70b Receipt OCR & AI Chat)
-GROQ_API_KEY=gsk_your_groq_api_key_here
-
-# OpenAI API Key Configuration
-OPENAI_API_KEY=sk-proj-your_openai_api_key_here
-
-# Finnhub Stock Market API Key
-FINNHUB_API_KEY=your_finnhub_key_here
-
-# Supabase Credentials
-VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-```
-
----
-
-### 3. Backend Setup (Python FastAPI)
+From the project root:
 
 ```bash
-# Navigate to the backend directory
-cd backend
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Start FastAPI server (Runs on http://localhost:8000)
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+npm run dev:all
 ```
+> 🌐 Web App: **`http://localhost:3000`** (or `http://localhost:3001`)  
+> ⚙️ FastAPI Backend: **`http://localhost:8000`**
 
 ---
 
-### 4. Web Frontend Setup (React + Vite)
+### 💻 2. Run Web Application Only
 
 ```bash
-# Install Node dependencies
-npm install
-
-# Start Vite dev server (Runs on http://localhost:3000)
 npm run dev
 ```
 
 ---
 
-### 5. Mobile App Setup (React Native + Expo)
+### 🐍 3. Run FastAPI Python Backend Only
 
 ```bash
-# Navigate to the mobile directory
+python backend/run.py
+```
+
+---
+
+### 📱 4. Run Mobile App (Expo Metro)
+
+```bash
+cd mobile
+npm start
+```
+> 💡 *To start with cleared Metro cache*: `npx expo start -c`  
+> 💡 *To run over secure tunnel (Wi-Fi/Cellular)*: `npx expo start --tunnel`
+
+---
+
+## 🔨 Commands to Build the Application
+
+### 🌐 Build Production Web Bundle
+
+```bash
+npm run build
+```
+> Output: Generates optimized static build inside the **`dist/`** directory.
+
+---
+
+### 🤖 Build Android APK Locally on Your Laptop
+
+```bash
+# Step 1: Prebuild native android folder
+cd mobile
+npx expo prebuild --platform android
+
+# Step 2: Build APK via Gradle
+cd android
+./gradlew assembleDebug       # For Debug APK
+./gradlew assembleRelease     # For Release APK
+```
+
+📍 **Local APK File Locations:**
+- Debug APK: `mobile/android/app/build/outputs/apk/debug/app-debug.apk`
+- Release APK: `mobile/android/app/build/outputs/apk/release/app-release-unsigned.apk`
+
+---
+
+### ☁️ Build Mobile App via Expo Cloud (EAS)
+
+```bash
 cd mobile
 
-# Install dependencies
-npm install
+# Build Android APK / Bundle
+npx eas-cli build --platform android --profile preview
 
-# Start Expo development server
-npm start
+# Build iOS IPA
+npx eas-cli build --platform ios --profile production
 ```
 
 ---
@@ -132,13 +147,14 @@ Expense Tracker/
 │   │   ├── main.py           # FastAPI REST routes (Users, Expenses, Categories, OCR, AI)
 │   │   ├── ai_insights.py    # Groq & OpenAI LLM Chatbot & Advisor
 │   │   ├── ml_predictor.py   # Linear regression budget burn-rate model
-│   │   ├── ocr_engine.py     # Multi-provider Vision OCR pipeline
+│   │   ├── ocr_engine.py     # Multi-provider Vision OCR & PDF parser
 │   │   └── schemas.py        # Pydantic data schemas
 │   ├── requirements.txt
 │   └── run.py
 ├── mobile/                   # React Native (Expo) Mobile Application
-│   ├── screens/              # HomeScreen, ReceiptScanner, AIChat, BankSmsSync, Profile
+│   ├── screens/              # HomeScreen, ReceiptScanner, AIChat, BankSmsSync, Profile, Auth
 │   ├── services/             # API client & Bank SMS parsing engine
+│   ├── context/              # AuthContext with WebBrowser Google OAuth & AsyncStorage session persistence
 │   ├── lib/                  # Supabase client adapter
 │   └── package.json
 ├── src/                      # React Web Application
@@ -155,7 +171,7 @@ Expense Tracker/
 │   │   └── UI/               # Reusable Glassmorphism Cards, Badges, Logos
 │   ├── context/
 │   │   ├── AuthContext.jsx   # Supabase Auth & Profile Persistence
-│   │   ├── ExpenseContext.jsx# Expense CRUD & Supabase DB Sync
+│   │   ├── ExpenseContext.jsx# Isolated Expense CRUD & Supabase DB Sync
 │   │   └── ThemeContext.jsx  # Dark / Light Theme State
 │   └── services/
 │       ├── apiService.js     # FastAPI HTTP client
@@ -171,10 +187,10 @@ Expense Tracker/
 
 ## 🗄️ Supabase PostgreSQL Database Setup
 
-Run the SQL script in [`supabase/schema.sql`](file:///i:/Richu/Projects/Expense%20Tracker/supabase/schema.sql) in your **Supabase SQL Editor** to initialize the database tables:
+Run the SQL script in [`supabase/schema.sql`](file:///i:/Richu/Projects/Expense%20Tracker/supabase/schema.sql) in your **Supabase SQL Editor** to initialize the database tables & Row Level Security:
 
 - `public.users`: User profiles, avatar URLs, income, budget, and strategy preferences.
-- `public.expenses`: Transactions, categories, amounts, dates, and payment methods.
+- `public.expenses`: Transactions, categories, amounts, dates, payment methods, and user ownership (`user_id`).
 - `public.categories`: Spending categories and monthly limits.
 - `public.savings_goals`: Goal vaults and milestone progress.
 
