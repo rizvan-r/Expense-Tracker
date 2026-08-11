@@ -1,0 +1,30 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build_android:
+    name: Build Android APK
+    runs_on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: eas/checkout@v1
+
+      - name: Setup Node.js
+        uses: eas/setup_node@v1
+        with:
+          node-version: '20'
+
+      - name: Install Mobile Dependencies
+        run: |
+          cd mobile
+          npm install
+
+      - name: Trigger EAS Android Build
+        uses: eas/build@v1
+        with:
+          platform: android
+          profile: preview
