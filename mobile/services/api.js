@@ -34,7 +34,7 @@ export const scanReceiptFile = async (imageUri, fileName = 'receipt.jpg', fileTy
     type: fileType,
   });
 
-  const response = await axios.post(`${API_BASE_URL}/api/ocr/upload`, formData, {
+  const response = await apiClient.post('/api/ocr/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
