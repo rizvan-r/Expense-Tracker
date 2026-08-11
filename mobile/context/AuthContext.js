@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { makeRedirectUri } from 'expo-auth-session';
 import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext();
@@ -195,7 +196,10 @@ export const AuthProvider = ({ children }) => {
     setAuthError(null);
     try {
       const WebBrowser = require('expo-web-browser');
-      const redirectUrl = 'spendai-mobile://auth';
+      const redirectUrl = makeRedirectUri({
+        scheme: 'spendai-mobile',
+        path: 'auth',
+      });
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',

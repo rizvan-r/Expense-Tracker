@@ -53,13 +53,78 @@ export const ExpenseProvider = ({ children }) => {
       }
 
       try {
-        const { data: dbExpenses, error: expErr } = await supabase
+        let { data: dbExpenses, error: expErr } = await supabase
           .from('expenses')
           .select('*, categories(name)')
           .eq('user_id', authUser.id)
           .order('date', { ascending: false });
 
-        if (!expErr && isMounted) {
+        // Auto-seed starter mock records for Rizvan / Google Auth user if database is empty
+        if (!expErr && (!dbExpenses || dbExpenses.length === 0) && isMounted) {
+          const starterMockExpenses = [
+            {
+              user_id: authUser.id,
+              merchant: 'Velalar College of Engineering and Technology',
+              amount: 115000.00,
+              date: new Date().toISOString().split('T')[0],
+              category: 'Education & Self Care',
+              payment_method: 'Bank Transfer',
+              notes: 'Txn Ref: Receipt #622 | Payment Mode: Bank Transfer | Line Items: TUITION FEES (x1)',
+              ocr_extracted: true
+            },
+            {
+              user_id: authUser.id,
+              merchant: 'Apple Store India',
+              amount: 42900.00,
+              date: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString().split('T')[0],
+              category: 'Shopping & Electronics',
+              payment_method: 'Credit Card',
+              notes: 'MacBook Air M3 Development Laptop Upgrade',
+              ocr_extracted: true
+            },
+            {
+              user_id: authUser.id,
+              merchant: 'Swiggy Gourmet',
+              amount: 1450.00,
+              date: new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString().split('T')[0],
+              category: 'Food & Dining',
+              payment_method: 'UPI / GPay',
+              notes: 'Team dinner & beverages',
+              ocr_extracted: false
+            },
+            {
+              user_id: authUser.id,
+              merchant: 'Zerodha Mutual Fund SIP',
+              amount: 15000.00,
+              date: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString().split('T')[0],
+              category: 'Subscriptions',
+              payment_method: 'Net Banking',
+              notes: 'Monthly Nifty 50 Index Fund SIP',
+              ocr_extracted: false
+            },
+            {
+              user_id: authUser.id,
+              merchant: 'Shell Fuel Station',
+              amount: 3200.00,
+              date: new Date(Date.now() - 6 * 24 * 3600 * 1000).toISOString().split('T')[0],
+              category: 'Transportation',
+              payment_method: 'Debit Card',
+              notes: 'V-Power Petrol refill',
+              ocr_extracted: false
+            }
+          ];
+
+          try {
+            const { data: seeded } = await supabase.from('expenses').insert(starterMockExpenses).select();
+            if (seeded && seeded.length > 0) {
+              dbExpenses = seeded;
+            }
+          } catch (seedErr) {
+            dbExpenses = starterMockExpenses;
+          }
+        }
+
+        if (isMounted) {
           const formatted = (dbExpenses || []).map(e => ({
             ...e,
             category: e.category || e.categories?.name || 'Miscellaneous'
@@ -67,13 +132,29 @@ export const ExpenseProvider = ({ children }) => {
           setSupabaseExpenses(formatted);
         }
 
-        const { data: dbGoals, error: goalErr } = await supabase
+        let { data: dbGoals, error: goalErr } = await supabase
           .from('savings_goals')
           .select('*')
           .eq('user_id', authUser.id)
           .order('created_at', { ascending: false });
 
-        if (!goalErr && isMounted) {
+        if (!goalErr && (!dbGoals || dbGoals.length === 0) && isMounted) {
+          const starterGoals = [
+            { user_id: authUser.id, title: 'AI Research & Tech Equipment Vault', target_amount: 300000.00, current_amount: 185000.00, target_date: '2026-12-31', category: 'Tech' },
+            { user_id: authUser.id, title: 'Emergency Wealth Fund', target_amount: 200000.00, current_amount: 140000.00, target_date: '2026-10-31', category: 'Security' },
+            { user_id: authUser.id, title: 'International Conference Travel', target_amount: 150000.00, current_amount: 85000.00, target_date: '2026-11-15', category: 'Travel' }
+          ];
+          try {
+            const { data: seededGoals } = await supabase.from('savings_goals').insert(starterGoals).select();
+            if (seededGoals && seededGoals.length > 0) {
+              dbGoals = seededGoals;
+            }
+          } catch (gErr) {
+            dbGoals = starterGoals;
+          }
+        }
+
+        if (isMounted) {
           setSupabaseGoals(dbGoals || EMPTY_ARRAY);
         }
       } catch (err) {

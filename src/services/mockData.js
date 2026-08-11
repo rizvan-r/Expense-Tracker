@@ -37,6 +37,19 @@ export const MULTI_PROFILES = [
     occupation: 'Business Analyst',
     financial_strategy: 'Conservative Saver',
     avatar_color: '#8b5cf6'
+  },
+  {
+    id: 'user-rizvan-google',
+    full_name: 'Rizvan R',
+    email: 'rizvan.r@gmail.com',
+    monthly_income: 110000.00,
+    monthly_budget: 65000.00,
+    currency: '₹',
+    savings_goal_target: 300000.00,
+    emergency_fund_target: 200000.00,
+    occupation: 'Tech Lead & AI Engineer',
+    financial_strategy: 'Aggressive Wealth Accumulator',
+    avatar_color: '#10b981'
   }
 ];
 
@@ -157,6 +170,63 @@ export const INITIAL_EXPENSES_BY_USER = {
       receipt_url: null,
       ocr_extracted: false
     }
+  ],
+  'user-rizvan-google': [
+    {
+      id: 'exp-riz-1',
+      merchant: 'Velalar College of Engineering and Technology',
+      amount: 115000.00,
+      date: new Date().toISOString().split('T')[0],
+      category: 'Education & Self Care',
+      payment_method: 'Bank Transfer',
+      notes: 'Txn Ref: Receipt #622 | Payment Mode: Bank Transfer | Line Items: TUITION FEES (x1)',
+      receipt_url: null,
+      ocr_extracted: true
+    },
+    {
+      id: 'exp-riz-2',
+      merchant: 'Apple Store India',
+      amount: 42900.00,
+      date: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString().split('T')[0],
+      category: 'Shopping & Electronics',
+      payment_method: 'Credit Card',
+      notes: 'MacBook Air M3 Development Laptop Upgrade',
+      receipt_url: null,
+      ocr_extracted: true
+    },
+    {
+      id: 'exp-riz-3',
+      merchant: 'Swiggy Gourmet',
+      amount: 1450.00,
+      date: new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString().split('T')[0],
+      category: 'Food & Dining',
+      payment_method: 'UPI / GPay',
+      notes: 'Team dinner & beverages',
+      receipt_url: null,
+      ocr_extracted: false
+    },
+    {
+      id: 'exp-riz-4',
+      merchant: 'Zerodha Mutual Fund SIP',
+      amount: 15000.00,
+      date: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString().split('T')[0],
+      category: 'Subscriptions',
+      payment_method: 'Net Banking',
+      notes: 'Monthly Nifty 50 Index Fund SIP',
+      receipt_url: null,
+      ocr_extracted: false
+    },
+    {
+      id: 'exp-riz-5',
+      merchant: 'Shell Fuel Station',
+      amount: 3200.00,
+      date: new Date(Date.now() - 6 * 24 * 3600 * 1000).toISOString().split('T')[0],
+      category: 'Transportation',
+      payment_method: 'Debit Card',
+      notes: 'V-Power Petrol refill',
+      receipt_url: null,
+      ocr_extracted: false
+    }
   ]
 };
 
@@ -173,6 +243,11 @@ export const INITIAL_SAVINGS_GOALS_BY_USER = {
   ],
   'user-vikram-103': [
     { id: 'goal-301', title: 'Bike Downpayment', target_amount: 100000.00, current_amount: 55000.00, target_date: '2026-08-31', category: 'Vehicle' }
+  ],
+  'user-rizvan-google': [
+    { id: 'goal-riz-1', title: 'AI Research & Tech Equipment Vault', target_amount: 300000.00, current_amount: 185000.00, target_date: '2026-12-31', category: 'Tech' },
+    { id: 'goal-riz-2', title: 'Emergency Wealth Fund', target_amount: 200000.00, current_amount: 140000.00, target_date: '2026-10-31', category: 'Security' },
+    { id: 'goal-riz-3', title: 'International Conference Travel', target_amount: 150000.00, current_amount: 85000.00, target_date: '2026-11-15', category: 'Travel' }
   ]
 };
 
