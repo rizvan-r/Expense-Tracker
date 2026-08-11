@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "SpendAI Mobile",
-    "slug": "spendai-mobile",
+    "slug": "ai-expense-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,8 +29,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "6f96c68f-1b15-49b8-b5fe-42a0191ed0bf"
+        "projectId": "268b43ff-cb42-47a1-9c24-fa7e5d78d579"
       }
-    }
+    },
+    "owner": "rizvanr"
   }
 }

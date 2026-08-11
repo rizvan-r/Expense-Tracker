@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
-import { Eye, Lock, Mail, User, ShieldCheck, Zap } from 'lucide-react-native';
+import { Eye, Lock, Mail, User, ShieldCheck } from 'lucide-react-native';
 
 export default function AuthScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -22,7 +22,7 @@ export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const { loginWithSupabase, signUpWithSupabase, loginWithGoogle, loginAsDemoUser } = useAuth();
+  const { loginWithSupabase, signUpWithSupabase, loginWithGoogle } = useAuth();
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -32,21 +32,6 @@ export default function AuthScreen() {
     } catch (err) {
       console.error('Google login error:', err);
       setErrorMsg('Google Sign-In failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    setLoading(true);
-    setErrorMsg('');
-    try {
-      const demoEmail = email.trim() || 'richu@spendai.app';
-      const demoName = fullName.trim() || demoEmail.split('@')[0];
-      await loginAsDemoUser(demoEmail, demoName);
-    } catch (err) {
-      console.error('Demo login error:', err);
-      setErrorMsg('Demo sign-in failed.');
     } finally {
       setLoading(false);
     }
@@ -167,15 +152,6 @@ export default function AuthScreen() {
               <Text style={styles.googleG}>G</Text>
             </View>
             <Text style={styles.googleBtnText}>Continue with Google</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.demoButton}
-            onPress={handleDemoLogin}
-            disabled={loading}
-          >
-            <Zap size={18} color="#10b981" style={{ marginRight: 8 }} />
-            <Text style={styles.demoButtonText}>⚡ 1-Tap Quick Demo Sign In</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

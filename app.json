@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "268b43ff-cb42-47a1-9c24-fa7e5d78d579"
+      }
+    },
+    "android": {
+      "package": "com.zync.spendai"
+    },
+    "ios": {
+      "bundleIdentifier": "com.zync.spendai",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    }
+  }
+}
