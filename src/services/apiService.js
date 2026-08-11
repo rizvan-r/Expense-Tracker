@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_FASTAPI_URL;
+  if (envUrl) {
+    return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
+  }
+  return 'http://localhost:8000/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const scanReceiptOCR = async (file) => {
   try {

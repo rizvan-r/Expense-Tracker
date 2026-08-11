@@ -17,10 +17,16 @@ export default function AnalyticsScreen({ navigation }) {
   const [prediction, setPrediction] = useState(null);
   const [monthlyBudget] = useState(45000);
 
+  const { user } = useAuth();
+
   const loadData = async () => {
+    if (!user?.id) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase.from('expenses').select('*');
+      const { data, error } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('user_id', user.id);
       if (!error && data) {
         setExpenses(data);
         // Call ML Budget Predictor endpoint
@@ -42,7 +48,7 @@ export default function AnalyticsScreen({ navigation }) {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [user?.id]);
 
   // Compute category breakdown
   const categoryTotals = expenses.reduce((acc, curr) => {

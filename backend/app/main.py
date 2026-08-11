@@ -119,7 +119,7 @@ def update_user(user_id: str, user: UserSchema):
 def get_expenses(user_id: Optional[str] = None):
     if user_id:
         return [e for e in db_expenses if e.get("user_id") == user_id]
-    return db_expenses
+    return []
 
 @app.post("/api/expenses")
 def create_expense(expense: ExpenseItem):

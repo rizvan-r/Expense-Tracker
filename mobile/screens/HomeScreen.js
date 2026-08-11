@@ -30,10 +30,12 @@ export default function HomeScreen({ navigation }) {
   const [monthlyBudget] = useState(45000);
 
   const loadExpenses = useCallback(async () => {
+    if (!user?.id) return;
     try {
       const { data, error } = await supabase
         .from('expenses')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(30);
 

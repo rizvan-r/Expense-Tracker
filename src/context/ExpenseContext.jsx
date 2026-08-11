@@ -46,16 +46,21 @@ export const ExpenseProvider = ({ children }) => {
     let isMounted = true;
 
     async function fetchSupabaseData() {
-      if (!isSupabaseConfigured || !authUser?.id) return;
+      if (!isSupabaseConfigured || !authUser?.id) {
+        setSupabaseExpenses(EMPTY_ARRAY);
+        setSupabaseGoals(EMPTY_ARRAY);
+        return;
+      }
 
       try {
         const { data: dbExpenses, error: expErr } = await supabase
           .from('expenses')
           .select('*, categories(name)')
+          .eq('user_id', authUser.id)
           .order('date', { ascending: false });
 
-        if (!expErr && dbExpenses && isMounted) {
-          const formatted = dbExpenses.map(e => ({
+        if (!expErr && isMounted) {
+          const formatted = (dbExpenses || []).map(e => ({
             ...e,
             category: e.category || e.categories?.name || 'Miscellaneous'
           }));
@@ -65,10 +70,11 @@ export const ExpenseProvider = ({ children }) => {
         const { data: dbGoals, error: goalErr } = await supabase
           .from('savings_goals')
           .select('*')
+          .eq('user_id', authUser.id)
           .order('created_at', { ascending: false });
 
-        if (!goalErr && dbGoals && isMounted) {
-          setSupabaseGoals(dbGoals);
+        if (!goalErr && isMounted) {
+          setSupabaseGoals(dbGoals || EMPTY_ARRAY);
         }
       } catch (err) {
         console.warn('Supabase fetch error, fallback to local state:', err);
@@ -97,17 +103,17 @@ export const ExpenseProvider = ({ children }) => {
 
   // Current active profile expenses & goals memoized with stable references
   const expenses = useMemo(() => {
-    if (isSupabaseConfigured && authUser?.id && supabaseExpenses.length > 0) {
+    if (isSupabaseConfigured && authUser?.id) {
       return supabaseExpenses;
     }
-    return userExpensesMap[userId] || INITIAL_EXPENSES_BY_USER[userId] || EMPTY_ARRAY;
+    return userExpensesMap[userId] || (INITIAL_EXPENSES_BY_USER[userId] ? INITIAL_EXPENSES_BY_USER[userId] : EMPTY_ARRAY);
   }, [isSupabaseConfigured, authUser?.id, supabaseExpenses, userExpensesMap, userId]);
 
   const savingsGoals = useMemo(() => {
-    if (isSupabaseConfigured && authUser?.id && supabaseGoals.length > 0) {
+    if (isSupabaseConfigured && authUser?.id) {
       return supabaseGoals;
     }
-    return userGoalsMap[userId] || INITIAL_SAVINGS_GOALS_BY_USER[userId] || EMPTY_ARRAY;
+    return userGoalsMap[userId] || (INITIAL_SAVINGS_GOALS_BY_USER[userId] ? INITIAL_SAVINGS_GOALS_BY_USER[userId] : EMPTY_ARRAY);
   }, [isSupabaseConfigured, authUser?.id, supabaseGoals, userGoalsMap, userId]);
 
   const [healthScoreData, setHealthScoreData] = useState(null);
