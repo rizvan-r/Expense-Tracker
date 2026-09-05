@@ -1,4 +1,6 @@
-# EAS Build Ignore Configuration
+# ==========================================
+# EAS Build Ignore Configuration (Mobile)
+# ==========================================
 node_modules/
 .git/
 .expo/
@@ -6,6 +8,10 @@ android/
 ios/
 dist/
 build/
+web-build/
+.idea/
+.vscode/
+*.log
 *.apk
 *.aab
 *.ipa

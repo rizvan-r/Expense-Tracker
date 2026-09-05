@@ -1,12 +1,24 @@
-# EAS Build Ignore Rule (Root)
+# ==========================================
+# EAS Build Ignore Configuration (Root)
+# ==========================================
 node_modules/
 .git/
 .expo/
 dist/
 build/
+web-build/
 backend/
 java-backend/
 supabase/
+tmp_receipts/
+tmp/
+temp/
+.artifacts/
+.agents/
+.idea/
+.vscode/
+*.log
+firebase-debug.log*
 *.apk
 *.aab
 *.ipa
