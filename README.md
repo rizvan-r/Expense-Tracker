@@ -105,6 +105,15 @@ npm run build
 
 ---
 
+### 📄 Deploy Web App to GitHub Pages
+
+1. Push your code to the `main` branch.
+2. In GitHub, open **Settings → Pages**.
+3. Under **Build and deployment**, choose **Source: GitHub Actions**.
+4. The workflow at `.github/workflows/deploy-pages.yml` will build and publish the `dist/` output automatically.
+
+---
+
 ### 🤖 Build Android APK Locally on Your Laptop
 
 ```bash
