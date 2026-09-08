@@ -352,7 +352,9 @@ export const fetchAIChatResponse = async ({ message, history = [], monthly_incom
 
     const targetSavings = Math.round(monthly_income * 0.20);
     const needs = Math.round(monthly_income * 0.50);
+    const wants = Math.round(monthly_income * 0.30);
     const emergency = Math.round(monthly_budget * 3);
+    let replyText = '';
 
     if (["sip", "invest", "mutual fund", "stock", "equity", "nifty", "portfolio", "wealth", "cagr", "sensex", "elss"].some(k => msgLower.includes(k))) {
       replyText = `📈 **Investment & Wealth Growth Strategy**:\n• **Target Monthly SIP**: Based on your ₹${monthly_income.toLocaleString('en-IN')} income, invest at least **₹${targetSavings.toLocaleString('en-IN')}/month** (20% rule).\n• **Recommended Vehicles**: Low-cost Nifty 50 Index Funds, Flexi-Cap Mutual Funds, and ELSS for 80C tax benefits.\n• **Compounding Power**: Investing ₹${targetSavings.toLocaleString('en-IN')}/mo at a 12% CAGR yields **~₹25+ Lakhs** in 10 years!\n• **Rule**: Build an emergency buffer first before allocating to long-term equity market funds.`;
