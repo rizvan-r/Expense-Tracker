@@ -110,7 +110,12 @@ npm run build
 1. Push your code to the `main` branch.
 2. In GitHub, open **Settings → Pages**.
 3. Under **Build and deployment**, choose **Source: GitHub Actions**.
-4. The workflow at `.github/workflows/deploy-pages.yml` will build and publish the `dist/` output automatically.
+4. In **Settings → Secrets and variables → Actions**, add the required deployment values as **Repository variables** or **Repository secrets**:
+   - `VITE_API_BASE_URL` (or `VITE_FASTAPI_URL`)
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY` (or `VITE_SUPABASE_PUBLISHABLE_KEY`)
+   - `VITE_FINNHUB_API_KEY` (optional)
+5. The workflow at `.github/workflows/deploy-pages.yml` will build and publish the `dist/` output automatically using those values.
 
 ---
 
